@@ -1,27 +1,79 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Comando {
-    public static boolean checkError(int x){
-        if(x==1){
-            if(App.line.equals("(,")|| App.line.equals( " (,")){
-                System.out.println("Error " + x +": El nombre de la tabla no fue especificado");
-               return true;
+   public static ArrayList<String> tableNames =new ArrayList<>();
+   
+    public static String parseInput(String input) {
+        if (input.length() >= 12 && input.substring(0, 12).equals("create table ")) {
+            App.line = App.in.replace("create table ", "").trim();
+            if (Comando.checkError(1, App.line)) {
+                return "";
+            }
+
+            App.line = App.line + ",";
+
+            return "create table";
+        }
+        if (input.length() >= 11 && input.substring(0, 11).equals("insert into ")){
+            int x = 0;
+            input= input.replace("insert into ", "").trim();
+            for (int i = 0; i<=input.length();i++){
+                if(String.valueOf(input.charAt(i)).equals(" ")){
+                    x=i;
+                    break;
+
+                }            
+            }
+
+            for(String X : tableNames){
+                if(input.substring(0, x).equals(X)){
+                    
+                }
             }
             
+            return "insert";
+            
         }
-        if(x==2){
-            if(App.input.equals(");")){
-                return false;
-            }
-            if(App.input.split(" ").length!= 2){
-                System.out.println("Error "+ x +": No se especifico el nombre o el tipo de variable");
+
+        return input;
+    }
+
+    public static boolean checkError(int x, String input) {
+
+        if (x == 1) {
+            if (App.line.equals("(,") || App.line.equals(" (,") || App.line.equals("")) {
+                System.out.println("Error " + x + ": Table name was not especified");
                 return true;
             }
-            
+
+        }
+        if (x == 2) {
+            if (App.input.equals(");")) {
+                return false;
+            }
+            if (App.input.split(" ").length != 2) {
+                System.out.println("Error " + x + ":The type of primitive variable was not assigned");
+                return true;
+            }
+
+        }
+        if (x == 3) {
+            String[] types = { "string", "int", "double", "byte", "char", "short", "float", "boolean" };
+            String[] type = input.split(" ");
+            for (String X : types) {
+                if (input.equals(");") || type[1].toLowerCase().contains(X)) {
+                    return false;
+                }
+
+            }
+            System.out.println("Error " + x + ": The type of primitive variable was not recognized");
         }
         return false;
+        
     }
+
     public static void saludame() {
         System.out.println("te saludo cv");
     }
@@ -32,11 +84,12 @@ public class Comando {
     }
 
     public static void createTable(String line) {
-        StringBuilder stringBuilder =new StringBuilder();
+        
+        StringBuilder stringBuilder = new StringBuilder();
         String[] in = line.split(",");
         int x = in.length - 2;
         String tableName = in[0].replace("(", "");
-       
+        tableNames.add(tableName);
         String filepath = tableName + ".csv";
 
         String[] temp = new String[x];
@@ -51,14 +104,14 @@ public class Comando {
             columnNames[i] = parts[0];
             columnType[i] = parts[1];
         }
-        for(String X : columnNames){
+        for (String X : columnNames) {
             stringBuilder.append(X).append(",");
-            
-           }
-           
+
+        }
+
         try (FileWriter fileWriter = new FileWriter(filepath)) {
-           fileWriter.write(stringBuilder.toString());
-           System.out.println("The table has been created successfully");
+            fileWriter.write(stringBuilder.toString());
+            System.out.println("The table has been created successfully");
         } catch (IOException e) {
             e.printStackTrace();
         }
