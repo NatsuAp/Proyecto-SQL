@@ -6,16 +6,26 @@ public class Comando {
    public static ArrayList<String> tableNames =new ArrayList<>();
    
     public static String parseInput(String input) {
-        if (input.length() >= 12 && input.substring(0, 12).equals("create table ")) {
-            App.line = App.in.replace("create table ", "").trim();
-            if (Comando.checkError(1, App.line)) {
-                return "";
-            }
-
+        String[] in = input.split(" ");
+        if(in[0].equals("create") && in[1].equals("table")){   
+            try{
+                if(!in[2].equals("(")){
+                    App.line = App.in.replace("create table ", "").trim();
             App.line = App.line + ",";
 
-            return "create table";
+            return "create";
+                }
+            }catch(IndexOutOfBoundsException e){
+            
+                checkError(1, input);
+                return "ERROR";
+            }
+            
         }
+
+      
+            
+        
         if (input.length() >= 11 && input.substring(0, 11).equals("insert into ")){
             int x = 0;
             input= input.replace("insert into ", "").trim();
@@ -43,10 +53,10 @@ public class Comando {
     public static boolean checkError(int x, String input) {
 
         if (x == 1) {
-            if (App.line.equals("(,") || App.line.equals(" (,") || App.line.equals("")) {
+            
                 System.out.println("Error " + x + ": Table name was not especified");
                 return true;
-            }
+            
 
         }
         if (x == 2) {

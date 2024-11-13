@@ -25,7 +25,7 @@ public class App {
                 case "end":
                     Comando.end();
                     break;
-                case "create table":
+                case "create":
                 if (Comando.checkError(1, input)) {
                     break;
                 }
@@ -45,8 +45,10 @@ public class App {
                     Comando.checkError(4, input);
 
                 default:
-
-                    System.out.println("Unknown command");
+                    if(!command.equals("ERROR")){
+                        System.out.println("Unknown command");
+                    }
+                    
                     break;
 
             }
