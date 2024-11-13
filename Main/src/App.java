@@ -15,28 +15,37 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         while (a) {
             input = scanner.nextLine();
+            
             in = input.toLowerCase();
-            command = Comando.parseInput(in);
+            command = Parser.parseInput(in);
 
             switchLabel: switch (command) {
+                case "help":
+                Comando.help();
+                break;
                 case "end":
                     Comando.end();
                     break;
                 case "create":
-
-                    while (!input.contains(");")) {
+                    
+                    while (!input.trim().equals(");")) {
                         input = scanner.nextLine();
                         line = line + input + ",";
-                        if (Comando.checkError(2, input) || Comando.checkError(3, input)) {
+                     
+                        if(Errors.checkError(5, input)||Errors.checkError(4, input)||Errors.checkError(3, input)) {
 
                             break switchLabel;
                         }
                     }
-                    Comando.createTable(line);
+                    if(!Errors.checkError(2, line)){
+                        Comando.createTable(line);
+                    }
+                    
+                    
 
                     break;
                     case "insert":
-                    Comando.checkError(4, input);
+                    
 
                 default:
                     if(!command.equals("ERROR")){
