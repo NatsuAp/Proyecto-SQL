@@ -6,47 +6,31 @@ public class Comando {
    public static ArrayList<String> tableNames =new ArrayList<>();
    
     public static String parseInput(String input) {
-        String[] in = input.split(" ");
-        if(in[0].equals("create") && in[1].equals("table")){   
-            try{
-                if(!in[2].equals("(")){
-                    App.line = App.in.replace("create table ", "").trim();
-            App.line = App.line + ",";
-
-            return "create";
-                }
-            }catch(IndexOutOfBoundsException e){
+        String[] in = input.split("\\s");
+        if(in[0].equals("create") && in[1].equals("table") ){   
             
-                checkError(1, input);
-                return "ERROR";
+                try{
+                    if(!in[2].equals("(")){
+                        if(in[2].charAt(in[2].length()-1)=='('|| in[3].equals("(")){
+                            App.line = App.in.replace("create table ", "").trim();
+                            App.line = App.line + ",";
+                            
+                    return "create";
+                        }
+                        
+                    }else{
+                       
+                        checkError(1, input);
+                        return "ERROR";
+                    }
+                }catch(ArrayIndexOutOfBoundsException e){
+                
+                    checkError(1, input);
+                    return "ERROR";
+                } 
+            
             }
             
-        }
-
-      
-            
-        
-        if (input.length() >= 11 && input.substring(0, 11).equals("insert into ")){
-            int x = 0;
-            input= input.replace("insert into ", "").trim();
-            for (int i = 0; i<=input.length();i++){
-                if(String.valueOf(input.charAt(i)).equals(" ")){
-                    x=i;
-                    break;
-
-                }            
-            }
-
-            for(String X : tableNames){
-                if(input.substring(0, x).equals(X)){
-                    
-                }
-            }
-            
-            return "insert";
-            
-        }
-
         return input;
     }
 
@@ -54,7 +38,7 @@ public class Comando {
 
         if (x == 1) {
             
-                System.out.println("Error " + x + ": Table name was not especified");
+                System.out.println("Error " + x + ": Syntax error");
                 return true;
             
 
@@ -80,14 +64,10 @@ public class Comando {
             }
             System.out.println("Error " + x + ": The type of primitive variable was not recognized");
         }
+        
         return false;
         
     }
-
-    public static void saludame() {
-        System.out.println("te saludo cv");
-    }
-
     public static void end() {
         System.out.print("Program ended");
         App.a = false;
@@ -118,7 +98,7 @@ public class Comando {
             stringBuilder.append(X).append(",");
 
         }
-
+       stringBuilder.deleteCharAt(stringBuilder.length()-1);
         try (FileWriter fileWriter = new FileWriter(filepath)) {
             fileWriter.write(stringBuilder.toString());
             System.out.println("The table has been created successfully");

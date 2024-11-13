@@ -19,16 +19,10 @@ public class App {
             command = Comando.parseInput(in);
 
             switchLabel: switch (command) {
-                case "saludame":
-                    Comando.saludame();
-                    break;
                 case "end":
                     Comando.end();
                     break;
                 case "create":
-                if (Comando.checkError(1, input)) {
-                    break;
-                }
 
                     while (!input.contains(");")) {
                         input = scanner.nextLine();
