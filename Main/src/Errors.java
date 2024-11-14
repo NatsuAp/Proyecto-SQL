@@ -48,6 +48,18 @@ public class Errors {
             }
             
         }
+        if(x==60){
+            System.out.println("Error hd");
+            return true;
+        }
+        if(x==61){
+            System.out.println("Error hd");
+            return true;
+        }
+        if(x==62){
+            System.out.println("Error hdp");
+            return true;
+        }
         return false;
         
     }
