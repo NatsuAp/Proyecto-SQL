@@ -16,7 +16,7 @@ public class Comando {
         String[] in = line.split(",");
         
         int x = in.length - 2;
-        String tableName = in[0].replace("(", "");
+        String tableName = in[0].replace("(", "").trim();
         tableNames.add(tableName);
         String filepath = tableName + ".csv";
 
@@ -37,6 +37,7 @@ public class Comando {
         }
        stringBuilder.deleteCharAt(stringBuilder.length()-1);
         try (FileWriter fileWriter = new FileWriter(filepath)) {
+           
             fileWriter.write(stringBuilder.toString());
             System.out.println("The table has been created successfully");
         } catch (IOException e) {

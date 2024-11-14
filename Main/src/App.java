@@ -46,7 +46,7 @@ public class App {
                     break;
                     case "insert":
                     
-
+                    break;
                 default:
                     if(!command.equals("ERROR")){
                         System.out.println("Unknown command");
