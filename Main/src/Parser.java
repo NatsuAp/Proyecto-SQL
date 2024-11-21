@@ -61,10 +61,17 @@ public class Parser {
     }
 
     public static boolean ParseInsert(String input) {
+<<<<<<< HEAD
         input = input.replace("(", "");
         input = input.replace(")", "");
         input = input.replace(",", "");
         String[] in2 = input.split(" ");
+=======
+        input = input.replace("(", " ");
+        input = input.replace(")", " ");
+        input = input.replace(",", " ");
+        String[] in2 = input.split("\\s");
+>>>>>>> df37642e8ed248603c814451ac89778b6b6f6e7d
         if (in2[0].equals("insert") && in2[1].equals("into")) {
 
             System.out.println(in2[2]);
