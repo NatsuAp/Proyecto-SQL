@@ -61,12 +61,12 @@ public class Parser {
     }
 
     public static boolean ParseInsert(String input) {
-<<<<<<< HEAD
+
         input = input.replace("(", "");
         input = input.replace(")", "");
         input = input.replace(",", "");
         String[] in2 = input.split(" ");
-=======
+
         input = input.replace("(", " ");
         input = input.replace(")", " ");
         input = input.replace(",", " ");
