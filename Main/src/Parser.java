@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Parser {
     public static String parseInput(String input) {
+        
         if (parseCreate(input)) {
             return "create";
         }
@@ -18,7 +19,8 @@ public class Parser {
         if (ParseInsert(input)) {
             return "insert";
         }
-        return "";
+        return "create";
+     
     }
 
     public static boolean parseCreate(String input) {
@@ -49,7 +51,6 @@ public class Parser {
         return false;
     }
 
-   
     public static int getPosition(String in, ArrayList<String> list) {
         for (int i = 0; i <= list.size(); i++) {
             if (list.get(i).equals(in)) {
@@ -101,4 +102,45 @@ public class Parser {
         }
         return false;
     }
+
+    public static boolean ParseSelect(String input) {
+        String command = "";
+        int j = 0;
+        String columns = "";
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) != ' ') {
+                j++;
+                command += input.charAt(i);
+                
+            } else {
+                break;
+            }
+
+        }
+        if (command.toLowerCase().equals("select")) {
+            command = input.replace("select", "");
+            command = command.trim();
+           System.out.println(command);
+
+            for (int i = 0; i < command.length(); i++) {
+                columns+=command.charAt(i);
+             
+                if(columns.length()>4 && columns.substring(columns.length()-4).equals("from")){
+                    System.out.println("imprime");
+                    break;
+                }
+            }
+            System.out.println(columns);
+            String[] column = columns.split(",");
+            
+                for(String x: column){
+                    System.out.println(x);
+                }
+            
+           
+           
+        }
+        return false;
+    }
+
 }

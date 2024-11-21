@@ -10,48 +10,49 @@ public class App {
     public static String line = "";
     public static String command;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         System.out.println("Program Initialized");
         Scanner scanner = new Scanner(System.in);
         while (a) {
             input = scanner.nextLine();
-            
+
             in = input.toLowerCase();
             command = Parser.parseInput(in);
 
             switchLabel: switch (command) {
                 case "help":
-                Comando.help();
-                break;
+                    Comando.help();
+                    break;
                 case "end":
                     Comando.end();
                     break;
                 case "create":
-                    
+                Parser.ParseSelect(input);
                     while (!input.trim().equals(");")) {
                         input = scanner.nextLine();
                         line = line + input + ",";
-                     
-                        if(Errors.checkError(5, input)||Errors.checkError(4, input)||Errors.checkError(3, input)) {
+
+                        if (Errors.checkError(5, input) || Errors.checkError(4, input) || Errors.checkError(3, input)) {
 
                             break switchLabel;
                         }
                     }
-                    if(!Errors.checkError(2, line)){
+                    if (!Errors.checkError(2, line)) {
                         Comando.createTable(line);
                     }
-                    
-                    
 
                     break;
-                    case "insert":
-                    
+                case "insert":
+
+                    break;
+                case "select":
+
                     break;
                 default:
-                    if(!command.equals("ERROR")){
+                    if (!command.equals("ERROR")) {
                         System.out.println("Unknown command");
                     }
-                    
+
                     break;
 
             }
