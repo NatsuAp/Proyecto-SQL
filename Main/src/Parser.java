@@ -64,11 +64,13 @@ public class Parser {
         input = input.replace("(", "");
         input = input.replace(")", "");
         input = input.replace(",", "");
-        String[] in2 = input.split("\\s");
+        String[] in2 = input.split(" ");
         if (in2[0].equals("insert") && in2[1].equals("into")) {
 
+            System.out.println(in2[2]);
+            System.out.println(in2[3]);
             if (in2[2].isEmpty() || in2[3].isEmpty()) {
-                Errors.checkError(1, input);
+                Errors.checkError(62, input);
                 return false;
             }
 
@@ -82,12 +84,11 @@ public class Parser {
                 scanner = new Scanner(file);
                 String col = scanner.nextLine().toLowerCase();
 
-                System.out.println(col);
                 scanner.close();
                 for (int i = 3; i < in2.length; i++) {
                     if (!col.contains(in2[i])) {
                         System.out.println(in2[i]);
-                        Errors.checkError(62, input);
+                        Errors.checkError(1, input);
                         return false;
                     }
                 }

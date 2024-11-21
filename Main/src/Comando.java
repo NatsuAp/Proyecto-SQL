@@ -1,9 +1,67 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Comando {
    public static ArrayList<String> tableNames =new ArrayList<>();
+    public static void insert(String linea2, String linea1){
+        linea2 = linea2.replace("(", "");
+        linea2 = linea2.replace(")", "");
+        linea2 = linea2.replace(",", "");
+        String[] line2 = linea2 .split(" ");
+        String[] cols = new String[line2.length-2];
+        for(int i = 2; i<line2.length; i++){
+            cols[i-2]=line2[i];
+        }
+
+        String fileCols = "";
+        try {
+            Scanner scanner = new Scanner(getFile(linea1));
+            fileCols = scanner.nextLine();
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            
+            e.printStackTrace();
+        }
+
+
+        String ColsNeeded= "";
+        String[] filesCols = fileCols.split(",");
+        for(String x : cols){
+            ColsNeeded = ColsNeeded + x;
+        }
+        
+
+        
+        String line= "";
+        for(int i = 0; i<filesCols.length; i++){
+            int t = 0;
+            if(ColsNeeded.contains(filesCols[i])){
+                line = line + cols[t] + ",";
+                t= t+1;
+            }else{
+                line = line + " ,";
+            }
+        }
+
+
+        FileWriter fileWriter;
+        try {
+            fileWriter = new FileWriter(getName(linea1)+".csv");
+            fileWriter.write(line);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+
+    }
+
+
     
     public static void end() {
         System.out.print("Program ended");
@@ -75,4 +133,25 @@ public class Comando {
      
     }
 
+    public static File getFile(String line){
+        String[] lines = line.split(" ");
+        File fileError = new File("");
+        for(int i = 0; i<lines.length; i++){
+            if(tableNames.contains(lines[i])){
+                File file = new File(lines[1]+".csv");
+                return file;
+            }
+        }
+        return fileError;
+    }
+
+    public static String getName(String line) {
+        String[] lines = line.split(" ");
+        for(int i = 0; i<lines.length; i++){
+            if(tableNames.contains(lines[i])){
+                return lines[i];
+            }
+        }
+        return lines[0];
+    }
 }

@@ -44,8 +44,9 @@ public class App {
                     
 
                     break;
-                    case "insert":
-                    
+                case "insert":
+                    input = scanner.nextLine();
+                    Comando.insert(input, in);
                     break;
                 default:
                     if(!command.equals("ERROR")){
