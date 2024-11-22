@@ -67,15 +67,7 @@ public class Parser {
         input = input.replace(",", "");
         String[] in2 = input.split(" ");
 
-        input = input.replace("(", " ");
-        input = input.replace(")", " ");
-        input = input.replace(",", " ");
-        String[] in2 = input.split("\\s");
->>>>>>> df37642e8ed248603c814451ac89778b6b6f6e7d
         if (in2[0].equals("insert") && in2[1].equals("into")) {
-
-            System.out.println(in2[2]);
-            System.out.println(in2[3]);
             if (in2[2].isEmpty() || in2[3].isEmpty()) {
                 Errors.checkError(62, input);
                 return false;
@@ -101,7 +93,6 @@ public class Parser {
                 }
 
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
