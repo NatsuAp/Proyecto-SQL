@@ -1,15 +1,19 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.util.Scanner;
+
 public class Comando {
    public static ArrayList<String> tableNames =new ArrayList<>();
-    
+   
+   
     public static void end() {
         System.out.print("Program ended");
         App.a = false;
     }
-
     public static void createTable(String line) {
         
         StringBuilder stringBuilder = new StringBuilder();
@@ -37,7 +41,6 @@ public class Comando {
         }
        stringBuilder.deleteCharAt(stringBuilder.length()-1);
         try (FileWriter fileWriter = new FileWriter(filepath)) {
-           
             fileWriter.write(stringBuilder.toString());
             System.out.println("The table has been created successfully");
         } catch (IOException e) {
@@ -52,8 +55,8 @@ public class Comando {
         // Command 1: CREATE TABLE
         System.out.println("1. CREATE TABLE");
         System.out.println("   Usage: CREATE TABLE table_name (");
-        System.out.println("             column_1 datatype,");
-        System.out.println("             column_2 datatype,");
+        System.out.println("             column_1 datatype");
+        System.out.println("             column_2 datatype");
         System.out.println("             column_3 datatype");
         System.out.println("          );");
         System.out.println("   Description: Creates a new table with the specified columns and data types.");
@@ -74,5 +77,58 @@ public class Comando {
         System.out.println("Type 'help' anytime to see this list again.");
      
     }
+    public static void select(String line){
+        int numLines =0;
+        ArrayList<Integer> order =new ArrayList<>();
+        ArrayList<String[]> rows =new ArrayList<>();
+        int c=0;
+        String input="";
+        input = line.replace("select", "").trim();
+        
+       
+        String columns = input.substring(0,input.toLowerCase().indexOf("from")).trim();
+        String table = input.substring(input.toLowerCase().indexOf("from")+4).trim();
+        File file =new File(table+".csv");
+        String[] columnIn = columns.split(",");
+        try (Scanner scanner = new Scanner(file)) {
+           
+         
+            String[] columnFile = scanner.nextLine().split(",");
+          for(int i =0;i<columnIn.length;i++){
+            for(int j =0;j<columnFile.length;j++){
+                if(columnIn[i].equals(columnFile[j])){
+                    order.add(j);
+                    
+                }
+            }
+          }
+          while(scanner.hasNextLine()){
+            String[] newLine=scanner.nextLine().trim().split(",");
+            String[] row =new String[order.size()];
+            for(int i=0; i<order.size();i++){
+                row[i]=newLine[order.get(i)];
+            }
+                
+            rows.add(row);
+            
+          }
+          String[][] data =rows.toArray(new String[0][]);
+          for(String column:columnIn){
+            System.out.println(column+ " ");
+          }
+          for (String[] row : data) {
+            for (String cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
+        }
+        } catch (FileNotFoundException e) {
+            
+           
+        }
+       
+        
 
+      
+    }
 }

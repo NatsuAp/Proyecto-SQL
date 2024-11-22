@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Parser {
+
     public static String parseInput(String input) {
-        
+
         if (parseCreate(input)) {
             return "create";
         }
@@ -19,8 +20,14 @@ public class Parser {
         if (ParseInsert(input)) {
             return "insert";
         }
-        return "create";
-     
+        if (ParseSelect(input)) {
+            return "select";
+        }
+        if (input.equals("clear")) {
+            return "clear";
+        }
+
+        return "";
     }
 
     public static boolean parseCreate(String input) {
@@ -105,41 +112,65 @@ public class Parser {
 
     public static boolean ParseSelect(String input) {
         String command = "";
-        int j = 0;
+        Boolean j = false;
         String columns = "";
-        for (int i = 0; i < input.length(); i++) {
-            if (input.charAt(i) != ' ') {
-                j++;
-                command += input.charAt(i);
-                
-            } else {
+        String table = "";
+        int X = 0;
+        if (!input.toLowerCase().startsWith("select")) {
+            return false;
+        }
+
+        command = input.replace("select", "");
+        command = command.trim();
+
+        // separa las columnas mencionadas en el input
+        for (int i = 0; i < command.length(); i++) {
+            columns += command.charAt(i);
+
+            if (columns.length() > 4 && columns.substring(columns.length() - 4).equals("from")) {
+                j = true;
                 break;
+
             }
-
         }
-        if (command.toLowerCase().equals("select")) {
-            command = input.replace("select", "");
-            command = command.trim();
-           System.out.println(command);
 
-            for (int i = 0; i < command.length(); i++) {
-                columns+=command.charAt(i);
-             
-                if(columns.length()>4 && columns.substring(columns.length()-4).equals("from")){
-                    System.out.println("imprime");
-                    break;
+        if (!j) {
+            Errors.checkError(1, input);
+
+            return false;
+        }
+        table = command.replace(columns, "").trim();
+        String[] column = columns.split(",\\s*");
+        column[column.length-1]=column[column.length-1].replace("from", "").trim();
+        File filepath = new File(table + ".csv");
+        
+        try (Scanner scanner = new Scanner(filepath)) {
+            
+            
+            
+            String[] tableColumns = scanner.nextLine().split(",");
+
+            scanner.close();
+            for (String x : tableColumns) {
+                for(String y:column){
+                    if(x.equals(y)){
+                        X+=1;
+                    }
                 }
             }
-            System.out.println(columns);
-            String[] column = columns.split(",");
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR 7: Table does not exist");
             
-                for(String x: column){
-                    System.out.println(x);
-                }
+            return false;
             
-           
-           
         }
+        if(column.length==X){
+            
+            return true;
+        }else{
+            System.out.println("ERROR 8: A column or columns do not exist");
+        }
+
         return false;
     }
 

@@ -27,7 +27,7 @@ public class App {
                     Comando.end();
                     break;
                 case "create":
-                Parser.ParseSelect(input);
+
                     while (!input.trim().equals(");")) {
                         input = scanner.nextLine();
                         line = line + input + ",";
@@ -46,6 +46,11 @@ public class App {
 
                     break;
                 case "select":
+                    Comando.select(in);
+                    break;
+                case "clear":
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
 
                     break;
                 default:
