@@ -101,8 +101,8 @@ public class Parser {
                 }
 
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+               
+               
             }
 
             return true;
@@ -122,8 +122,13 @@ public class Parser {
 
         command = input.replace("select", "");
         command = command.trim();
-
-        // separa las columnas mencionadas en el input
+      
+        String temp = command.substring(0, input.toLowerCase().indexOf("from")-1).trim();
+        temp = temp.replaceAll("\\s","");
+        
+        if(temp.charAt(0)!='*'){
+            
+            // separa las columnas mencionadas en el input
         for (int i = 0; i < command.length(); i++) {
             columns += command.charAt(i);
 
@@ -170,6 +175,10 @@ public class Parser {
         }else{
             System.out.println("ERROR 8: A column or columns do not exist");
         }
+        }else{
+            return true;
+        }
+        
 
         return false;
     }

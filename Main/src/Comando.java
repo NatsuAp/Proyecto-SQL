@@ -1,9 +1,11 @@
+
 import java.io.File;
 import java.io.FileNotFoundException;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Comando {
@@ -83,47 +85,84 @@ public class Comando {
 
         ArrayList<Integer> order = new ArrayList<>();
         ArrayList<String> rows = new ArrayList<>();
-        
+
         String input = "";
         input = line.replace("select", "").trim();
 
         String columns = input.substring(0, input.toLowerCase().indexOf("from")).trim();
         String table = input.substring(input.toLowerCase().indexOf("from") + 4).trim();
         File file = new File(table + ".csv");
-        String[] columnIn = columns.replaceAll("\\s", "").split(",");
-        try (Scanner scanner = new Scanner(file)) {
+        
+       
 
-            String[] columnFile = scanner.nextLine().trim().split(",");
-            for (int i = 0; i < columnIn.length; i++) {
-                for (int j = 0; j < columnFile.length; j++) {
-                    if (columnIn[i].equals(columnFile[j])) {
-                        order.add(j + 1);
+            String[] columnIn = columns.replaceAll("\\s", "").split(",");
+            if (!columns.equals("*")) {
+
+                try (Scanner scanner = new Scanner(file)) {
+                    String[] columnFile = scanner.nextLine().trim().split(",");
+
+                    for (int i = 0; i < columnIn.length; i++) {
+                        for (int j = 0; j < columnFile.length; j++) {
+                            if (columnIn[i].equals(columnFile[j])) {
+                                order.add(j + 1);
+                            }
+                        }
                     }
-                }
-            }
 
-            while (scanner.hasNextLine()) {
+                    while (scanner.hasNextLine()) {
+                        try {
+                            for (int i = 0; i < order.size(); i++) {
+
+                                String[] temp = scanner.nextLine().split(",");
+                                String tempString = "";
+                                for (int x : order) {
+
+                                    tempString = tempString + "," + temp[x - 1];
+                                    tempString = tempString.replaceAll("\\s", "");
+
+                                }
+                                rows.add(tempString.substring(1));
+                            }
+                        } catch (NoSuchElementException e) {
+                            System.out.println(columns);
+                            for (int i = 0; i < rows.size(); i++) {
+                                System.out.println(rows.get(i));
+                            }
+                            return;
+                        }
+
+                    }
+                    columns = columns.replaceAll("\\s", "");
+                    System.out.println(columns);
+                    for (int i = 0; i < rows.size(); i++) {
+                        System.out.println(rows.get(i));
+                    }
+
+                } catch (FileNotFoundException e) {
+
+                }
+            } else {
                
-                for (int i = 0; i < order.size(); i++) {
-                    String[] temp = scanner.nextLine().split(",");
-                    String tempString = "";
-                    for (int x : order) {
+                try (Scanner scanner = new Scanner(file)) {
+                    String[] columnFile = scanner.nextLine().trim().split(",");
 
-                        tempString = tempString + "," + temp[x - 1];
-                        
+                    for (int j = 0; j < columnFile.length; j++) {
+                        columns += "," + columnFile[j];
                     }
-                    rows.add(tempString.substring(1));
+                    columns = columns.substring(2);
+                    columns = columns.replaceAll("\\s", "");
+                    System.out.println(columns);
+                    while (scanner.hasNextLine()) {
+                       System.out.println(scanner.nextLine());
+
+                    }
+                    
+                  
+                   
+                } catch (FileNotFoundException e) {
+
                 }
             }
-            System.out.println(columns);
-            for(int i=0;i<rows.size();i++){
-                System.out.println(rows.get(i));
-            }
-           
-
-        } catch (FileNotFoundException e) {
-
-        }
-
+       
     }
 }
