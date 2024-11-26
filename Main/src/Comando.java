@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class Comando {
     public static ArrayList<String> tableNames = new ArrayList<>();
+    public static String tableFolder = "tables";
 
     public static void end() {
         System.out.print("Program ended");
@@ -24,6 +25,12 @@ public class Comando {
         int x = in.length - 2;
         String tableName = in[0].replace("(", "").trim();
         tableNames.add(tableName);
+
+        // Create folder
+        
+        File baseFolder = new File(tableFolder);
+        baseFolder.mkdirs();
+
         String filepath = tableName + ".csv";
 
         String[] temp = new String[x];
@@ -42,7 +49,7 @@ public class Comando {
             stringBuilder.append(X).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        try (FileWriter fileWriter = new FileWriter(filepath)) {
+        try (FileWriter fileWriter = new FileWriter(baseFolder + "/" + filepath)) {
             fileWriter.write(stringBuilder.toString());
             System.out.println("The table has been created successfully");
         } catch (IOException e) {
@@ -92,13 +99,13 @@ public class Comando {
         String columns = input.substring(0, input.toLowerCase().indexOf("from")).trim();
         String table = input.substring(input.toLowerCase().indexOf("from") + 4).trim();
         File file = new File(table + ".csv");
-        
+        File baseFolder = new File(tableFolder);
        
 
             String[] columnIn = columns.replaceAll("\\s", "").split(",");
             if (!columns.equals("*")) {
 
-                try (Scanner scanner = new Scanner(file)) {
+                try (Scanner scanner = new Scanner(baseFolder + "/" + file)) {
                     String[] columnFile = scanner.nextLine().trim().split(",");
 
                     for (int i = 0; i < columnIn.length; i++) {
@@ -138,25 +145,16 @@ public class Comando {
                         System.out.println(rows.get(i));
                     }
 
-                } catch (FileNotFoundException e) {
-
                 }
             } else {
                
                 try (Scanner scanner = new Scanner(file)) {
-                    String[] columnFile = scanner.nextLine().trim().split(",");
-
-                    for (int j = 0; j < columnFile.length; j++) {
-                        columns += "," + columnFile[j];
-                    }
-                    columns = columns.substring(2);
-                    columns = columns.replaceAll("\\s", "");
-                    System.out.println(columns);
-                    while (scanner.hasNextLine()) {
-                       System.out.println(scanner.nextLine());
-
+                    while(scanner.hasNextLine()){
+                        System.out.println(scanner.nextLine());
                     }
                     
+
+                   
                   
                    
                 } catch (FileNotFoundException e) {

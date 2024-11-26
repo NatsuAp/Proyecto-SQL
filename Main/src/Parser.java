@@ -149,13 +149,16 @@ public class Parser {
         column[column.length-1]=column[column.length-1].replace("from", "").trim();
         File filepath = new File(table + ".csv");
         
-        try (Scanner scanner = new Scanner(filepath)) {
+        File baseFolder = new File(Comando.tableFolder);
+
+        try (Scanner scanner = new Scanner(baseFolder + "/" + filepath)) {
             
-            
+            String temp2 = scanner.nextLine().split(",");
+            temp2 = temp2.replace("tables/", "");
             
             String[] tableColumns = scanner.nextLine().split(",");
 
-            scanner.close();
+            
             for (String x : tableColumns) {
                 for(String y:column){
                     if(x.equals(y)){
@@ -163,11 +166,6 @@ public class Parser {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR 7: Table does not exist");
-            
-            return false;
-            
         }
         if(column.length==X){
             
