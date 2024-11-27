@@ -33,13 +33,15 @@ public class App {
                         line = line + input + ",";
 
                         if (Errors.checkError(5, input) || Errors.checkError(4, input) || Errors.checkError(3, input)) {
-
+                            
                             break switchLabel;
                         }
                     }
-                    if (!Errors.checkError(2, line)) {
+                    if(!Errors.checkError(2, line)){
                         Comando.createTable(line);
                     }
+                        
+                    
 
                     break;
                 case "insert":
@@ -53,6 +55,12 @@ public class App {
                     System.out.flush();
 
                     break;
+                case "tables":
+                Comando.listTables();
+                break;
+                case "columns":
+                Comando.showColumns(in);
+                break;
                 default:
                     if (!command.equals("ERROR")) {
                         System.out.println("Unknown command");

@@ -12,7 +12,7 @@ public class Errors {
             if (input.split(",").length <= 2) {
                 System.out.println("Error " + x + ": The table can not be empty when closed");
                
-                return false;
+                return true;
             }
 
         }
