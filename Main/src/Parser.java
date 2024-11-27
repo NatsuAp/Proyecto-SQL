@@ -76,12 +76,16 @@ public class Parser {
 
     public static boolean ParseInsert(String input) {
 
+
         input = input.replace("(", "");
         input = input.replace(")", "");
         input = input.replace(",", "");
         String[] in2 = input.split(" ");
-
+        
         if (in2[0].equals("insert") && in2[1].equals("into")) {
+
+            System.out.println(in2[2]);
+            System.out.println(in2[3]);
             if (in2[2].isEmpty() || in2[3].isEmpty()) {
                 Errors.checkError(62, input);
                 return false;
@@ -107,6 +111,7 @@ public class Parser {
                 }
 
             } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -115,6 +120,8 @@ public class Parser {
         return false;
     }
 
+<<<<<<< HEAD
+=======
     public static boolean ParseSelect(String input) {
         String command = "";
         Boolean j = false;
@@ -238,4 +245,6 @@ public class Parser {
         
         return false;
     }
+>>>>>>> 24d4256b75a6078327ad973c6058f4ff362e02a4
 }
+

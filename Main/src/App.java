@@ -47,10 +47,20 @@ public class App {
                 case "insert":
 
                     input = scanner.nextLine();
+<<<<<<< HEAD
+                    String en = input.toLowerCase();
+                    if(!en.contains("values")){
+                        Errors.checkError(1, en);
+                    }else{
+                        Comando.insert(input, in);
+                    }
+                    
+=======
                     Comando.insert(input, in);
 
 
 
+>>>>>>> 24d4256b75a6078327ad973c6058f4ff362e02a4
                     break;
                 case "select":
                     Comando.select(in);
