@@ -75,14 +75,15 @@ public class Parser {
     }
 
     public static boolean ParseInsert(String input) {
-        input = input.replace("(", " ");
-        input = input.replace(")", " ");
-        input = input.replace(",", " ");
-        String[] in2 = input.split("\\s");
-        if (in2[0].equals("insert") && in2[1].equals("into")) {
 
+        input = input.replace("(", "");
+        input = input.replace(")", "");
+        input = input.replace(",", "");
+        String[] in2 = input.split(" ");
+
+        if (in2[0].equals("insert") && in2[1].equals("into")) {
             if (in2[2].isEmpty() || in2[3].isEmpty()) {
-                Errors.checkError(1, input);
+                Errors.checkError(62, input);
                 return false;
             }
 
@@ -96,7 +97,6 @@ public class Parser {
                 scanner = new Scanner(file);
                 String col = scanner.nextLine().toLowerCase();
 
-                System.out.println(col);
                 scanner.close();
                 for (int i = 3; i < in2.length; i++) {
                     if (!col.contains(in2[i])) {
@@ -107,8 +107,7 @@ public class Parser {
                 }
 
             } catch (FileNotFoundException e) {
-               
-               
+                e.printStackTrace();
             }
 
             return true;

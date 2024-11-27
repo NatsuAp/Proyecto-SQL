@@ -1,15 +1,97 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+
 import java.util.Scanner;
 
 public class Comando {
+   public static String tableFolder = "tables";
     public static ArrayList<String> tableNames = new ArrayList<>();
-    public static String tableFolder = "tables";
+
+
+    public static void insert(String linea2, String linea1) {
+
+        linea2 = linea2.replace("(", "");
+        linea2 = linea2.replace(")", "");
+        linea2 = linea2.replace(",", "");
+        String[] line2 = linea2.split(" ");
+
+        linea1 = linea1.replace("(", "");
+        linea1 = linea1.replace(")", "");
+        linea1 = linea1.replace(",", "");
+        String[] line1 = linea1.split(" ");
+
+        String[] cols = new String[line1.length - 3];
+        for (int i = 3; i < line1.length; i++) {
+            cols[i - 3] = line1[i];
+
+        }
+        String ColsNeeded = "";
+
+        for (String x : cols) {
+            ColsNeeded = ColsNeeded + x + " ";
+        }
+
+        String fileCols = "";
+        try {
+            Scanner scanner = new Scanner(getFile(linea1));
+            fileCols = scanner.nextLine();
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+        }
+        fileCols = fileCols.toLowerCase();
+        String[] filesCols = fileCols.split(",");
+
+        for(String x: line2){
+            System.out.println(x);
+        }
+        String line = "";
+        int t = 0;
+        for (int i = 0; i < filesCols.length; i++) {
+            
+            if (ColsNeeded.contains(filesCols[i])) {
+                if(i!=0){
+                    line = line +   ", " + line2[t] ;
+                    t = t + 1;
+                }else{
+                    line=line+line2[t];
+                    t=t+1;
+                }
+                
+            } else {
+                if(i!=0){
+                    line =  " , "+line ;
+                }else{
+                    line= line+" ";
+                }
+                
+            }
+        }
+        System.out.println(line);
+        FileWriter fileWriter;
+        try {
+            // Open the file in append mode by passing 'true' as the second argument
+            fileWriter = new FileWriter(getName(linea1) + ".csv", true);
+            fileWriter.write( "\n"+line ); // Add a newline to separate lines
+            fileWriter.close(); // Always close the writer after use
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Listo");
+    }
+
+
+  
+
     public static void end() {
         System.out.print("Program ended");
         App.a = false;
@@ -46,7 +128,12 @@ public class Comando {
             stringBuilder.append(X).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+   
+
+
         try (FileWriter fileWriter = new FileWriter(baseFolder + "/" + filepath)) {
+
             fileWriter.write(stringBuilder.toString());
             System.out.println("The table has been created successfully");
         } catch (IOException e) {
@@ -57,6 +144,9 @@ public class Comando {
 
     public static void help() {
         System.out.println("Available Commands:");
+
+     
+
     System.out.println("-------------------");
 
     // Command 1: CREATE TABLE
@@ -145,14 +235,14 @@ public class Comando {
                         try {
                             for (int i = 0; i < order.size(); i++) {
 
+
                                 String[] temp = scanner.nextLine().split(",");
                                 String tempString = "";
                                 for (int x : order) {
 
                                     tempString = tempString + "," + temp[x - 1];
                                     tempString = tempString.replaceAll("\\s", "");
-
-                                }
+                                                                  }
                                 rows.add(tempString.substring(1));
                             }
                         } catch (NoSuchElementException e) {
@@ -188,6 +278,31 @@ public class Comando {
                 }
             }
        
+    }
+                                  
+
+
+
+    public static File getFile(String line) {
+        String[] lines = line.split(" ");
+        File fileError = new File("");
+        for (int i = 0; i < lines.length; i++) {
+            if (tableNames.contains(lines[i])) {
+                File file = new File(lines[2] + ".csv");
+                return file;
+            }
+        }
+        return fileError;
+    }
+
+    public static String getName(String line) {
+        String[] lines = line.split(" ");
+        for (int i = 0; i < lines.length; i++) {
+            if (tableNames.contains(lines[i])) {
+                return lines[i];
+            }
+        }
+        return lines[0];
     }
 
     public static void listTables(){
@@ -228,5 +343,6 @@ public class Comando {
             System.out.println("There was an error accessing the File: "+ table+".csv");
         }
            
+
     }
 }

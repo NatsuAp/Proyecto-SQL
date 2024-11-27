@@ -46,6 +46,11 @@ public class App {
                     break;
                 case "insert":
 
+                    input = scanner.nextLine();
+                    Comando.insert(input, in);
+
+
+
                     break;
                 case "select":
                     Comando.select(in);
