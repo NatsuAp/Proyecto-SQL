@@ -196,7 +196,7 @@ public class Comando {
         if(tableNames.isEmpty()){
             System.out.println("You do not have any tables at the moment");
         }else{
-            System.out.println("\\s");
+            
         System.out.println("Available Tables:");
         System.out.println("-----------------");
         for(String x: tableNames){

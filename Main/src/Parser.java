@@ -228,10 +228,12 @@ public class Parser {
                     
                     return true;
                 }
-               }
                 
+               }
+               System.out.println("Error 8: Table does not exist");
             }
         }else{
+           
             return false;
         }
         
