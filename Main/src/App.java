@@ -46,7 +46,13 @@ public class App {
                     break;
                 case "insert":
                     input = scanner.nextLine();
-                    Comando.insert(input, in);
+                    String en = input.toLowerCase();
+                    if(!en.contains("values")){
+                        Errors.checkError(1, en);
+                    }else{
+                        Comando.insert(input, in);
+                    }
+                    
                     break;
                 default:
                     if(!command.equals("ERROR")){
