@@ -16,7 +16,9 @@ public class Comando {
 
 
     public static void insert(String linea2, String linea1) {
+        linea2 = linea2.toLowerCase();
 
+        linea2 = linea2.replace("values ", "");
         linea2 = linea2.replace("(", "");
         linea2 = linea2.replace(")", "");
         linea2 = linea2.replace(",", "");
@@ -51,32 +53,32 @@ public class Comando {
         fileCols = fileCols.toLowerCase();
         String[] filesCols = fileCols.split(",");
 
-        for(String x: line2){
-            System.out.println(x);
-        }
+        System.out.println(ColsNeeded + "colsneeded");
         String line = "";
         int t = 0;
         for (int i = 0; i < filesCols.length; i++) {
-            
+            System.out.println(filesCols[i] + "Columna");
+            System.out.println(line2[t] + " Valor ");
             if (ColsNeeded.contains(filesCols[i])) {
-                if(i!=0){
-                    line = line +   ", " + line2[t] ;
+                if (i != 0) {
+                    line = line + ", " + line2[t];
                     t = t + 1;
-                }else{
-                    line=line+line2[t];
-                    t=t+1;
+                } else {
+                    line = line + line2[t];
+                    t = t + 1;
                 }
-                
+
             } else {
-                if(i!=0){
-                    line =  " , "+line ;
-                }else{
-                    line= line+" ";
+                if (i != 0) {
+                    line =  line + " , " ;
+                } else {
+                    line = line + " ";
                 }
-                
+
             }
+            System.out.println(line);
         }
-        System.out.println(line);
+        System.out.println("LINEA " + line);
         FileWriter fileWriter;
         try {
             // Open the file in append mode by passing 'true' as the second argument
