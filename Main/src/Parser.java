@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Parser {
+    public static String columnTemp ="";
+    public static String tableTemp="";
+    public static String conditionTemp="";
 
     public static String parseInput(String input) {
-
+        if (parseDelete(input)) {
+            return "delete";
+        }
         if (parseCreate(input)) {
             return "create";
         }
@@ -26,10 +31,10 @@ public class Parser {
         if (input.equals("clear")) {
             return "clear";
         }
-        if(parseListTables(input)){
+        if (parseListTables(input)) {
             return "tables";
         }
-        if(parseShowColumns(input)){
+        if (parseShowColumns(input)) {
             return "columns";
         }
 
@@ -91,7 +96,7 @@ public class Parser {
                 Errors.checkError(1, input);
                 return false;
             }
-            File file = new File(in2[2] + ".csv");
+            File file = new File("tables/" + in2[2] + ".csv");
             Scanner scanner;
             try {
                 scanner = new Scanner(file);
@@ -124,118 +129,174 @@ public class Parser {
         if (!input.toLowerCase().startsWith("select")) {
             return false;
         }
-        
-       try {
-        command = input.replace("select", "");
-        command = command.trim();
-      
-        String temp = command.substring(0, input.toLowerCase().indexOf("from")-1).trim();
-        temp = temp.replaceAll("\\s","");
-        
-        
-            
+
+        try {
+            command = input.replace("select", "");
+            command = command.trim();
+
+            String temp = command.substring(0, input.toLowerCase().indexOf("from") - 1).trim();
+            temp = temp.replaceAll("\\s", "");
+
             // separa las columnas mencionadas en el input
-        for (int i = 0; i < command.length(); i++) {
-            columns += command.charAt(i);
+            for (int i = 0; i < command.length(); i++) {
+                columns += command.charAt(i);
 
-            if (columns.length() > 4 && columns.substring(columns.length() - 4).equals("from")) {
-                j = true;
-                break;
+                if (columns.length() > 4 && columns.substring(columns.length() - 4).equals("from")) {
+                    j = true;
+                    break;
 
+                }
             }
+
+            if (!j) {
+                Errors.checkError(1, input);
+
+                return false;
+            }
+            table = command.replace(columns, "").trim();
+            File filepath = new File("tables/" + table + ".csv");
+            if (columns.charAt(0) != '*') {
+
+                String[] column = columns.split(",\\s*");
+                column[column.length - 1] = column[column.length - 1].replace("from", "").trim();
+
+                try (Scanner scanner = new Scanner(filepath)) {
+
+                    String[] tableColumns = scanner.nextLine().split(",");
+
+                    for (String x : tableColumns) {
+                        for (String y : column) {
+                            if (x.equals(y)) {
+                                X += 1;
+                            }
+                        }
+                    }
+                    if (column.length == X) {
+
+                        return true;
+                    } else {
+                        System.out.println("ERROR 8: A column or columns do not exist");
+                    }
+                } catch (FileNotFoundException e) {
+
+                    System.out.println("ERROR 7: Table does not exist");
+
+                    return false;
+
+                }
+
+            } else {
+                try (Scanner scanner = new Scanner(filepath)) {
+                    return true;
+                } catch (FileNotFoundException e) {
+                    System.out.println("ERROR 7: Table does not exist");
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            Errors.checkError(1, input);
+            return false;
         }
 
-        if (!j) {
-            Errors.checkError(1, input);
+        return false;
+    }
+
+    public static boolean parseListTables(String input) {
+        String in = input.replaceAll("\\s", "");
+        return in.equals("listtables") || in.equals("showtables");
+
+    }
+
+    public static boolean parseShowColumns(String input) {
+        input = input.replaceAll("\\s", "");
+        if (input.length() > 14) {
+            String in = input.substring(0, 15);
+
+            if (in.toLowerCase().equals("showcolumnsfrom")) {
+                in = input.substring(15);
+                for (String x : Comando.tableNames) {
+                    if (in.equals(x)) {
+
+                        return true;
+                    }
+
+                }
+                System.out.println("Error 8: Table does not exist");
+            }
+        } else {
 
             return false;
         }
-        table = command.replace(columns, "").trim();
-        File filepath = new File("tables/"+ table + ".csv");
-        if(columns.charAt(0)!='*'){
 
-        
-        String[] column = columns.split(",\\s*");
-        column[column.length-1]=column[column.length-1].replace("from", "").trim();
-        
-        
-        try (Scanner scanner = new Scanner(filepath)) {
-            
-            
-            
-            String[] tableColumns = scanner.nextLine().split(",");
-            
-            
-            for (String x : tableColumns) {
-                for(String y:column){
-                    if(x.equals(y)){
-                        X+=1;
+        return false;
+    }
+
+    public static boolean parseDelete(String input) {
+        try {
+            int j = 0;
+            String condition = "";
+            String column = "";
+            String table = "";
+            String in = input.substring(0, 12);
+            if (in.toLowerCase().equals("delete from ")) {
+
+                input = input.replace(in, "");
+
+                for (int i = 0; i <= input.length(); i++) {
+                    if (input.charAt(i) != '\s') {
+                        table += input.charAt(i);
+                    } else {
+                        break;
                     }
                 }
-            }
-            if(column.length==X){
-            
-                return true;
-            }else{
-                System.out.println("ERROR 8: A column or columns do not exist");
-            }
-        } catch (FileNotFoundException e) {
-           
-            System.out.println("ERROR 7: Table does not exist");
-            
-            return false;
-            
-        }
-        
-        }else{
-           try(Scanner scanner = new Scanner(filepath)) {
-            return true;
-           } catch (FileNotFoundException e) {
-            System.out.println("ERROR 7: Table does not exist");
-            return false;
-           }
-        }
-       } catch (Exception e) {
-        Errors.checkError(1, input);
-        return false;
-       }
-
-        
-       
-        
-
-        return false;
-    }
-
-    public static boolean parseListTables(String input){
-        String in = input.replaceAll("\\s", "");
-        return in.equals("listtables")||in.equals("showtables");
-         
-        
-        
-    }
-
-    public static boolean parseShowColumns(String input){
-        input = input.replaceAll("\\s", "");
-        if(input.length()>14){  
-            String in = input.substring(0,15);
-           
-            if(in.toLowerCase().equals("showcolumnsfrom")){
-               in = input.substring(15);
-               for(String x: Comando.tableNames){
-                if(in.equals(x)){
-                    
-                    return true;
-                }
                 
-               }
-               System.out.println("Error 8: Table does not exist");
+                if (Helpers.checkTableExist(table)) {
+                    System.out.println("2");
+                    input = input.replaceFirst(table, "");
+                    input = input.substring(1);
+                    if (input.substring(0, 5).equals("where")) {
+                        input = input.substring(5);
+                    }
+                    input = input.substring(1);
+                    for (int i = 0; i < input.length(); i++) {
+                        if (input.charAt(i) != '=' && input.charAt(i) != '>' && input.charAt(i) != '<') {
+                            column += input.charAt(i);
+                            j = i;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (Helpers.checkColumnExist(table, column)) {
+                        condition = input.substring(j + 1);
+                        if (condition.charAt(0) == '>' || condition.charAt(0) == '<') {
+                            j = 0;
+                            for (int i = 0; i < 10; i++) {
+                                if ((condition.substring(1).contains(String.valueOf(i)))) {
+                                    j++;
+                                }
+                            }
+                            if (j < 1) {
+                                return false;
+                            }
+                        }
+                        
+                        conditionTemp=condition;
+                        tableTemp=table;
+                        columnTemp=column;
+                        
+                        return true;
+                    } else {
+                        System.out.println("Error 9: Table does not exist");
+                        return false;
+                    }
+
+                }
             }
-        }else{
-           
+        } catch (Exception e) {
+            Errors.checkError(1, input);
             return false;
         }
-        
+
         return false;
     }
 }

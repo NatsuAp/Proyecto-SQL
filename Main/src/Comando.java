@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import java.util.NoSuchElementException;
 
 import java.util.Scanner;
@@ -79,7 +80,7 @@ public class Comando {
         FileWriter fileWriter;
         try {
             // Open the file in append mode by passing 'true' as the second argument
-            fileWriter = new FileWriter(getName(linea1) + ".csv", true);
+            fileWriter = new FileWriter("tables/"+getName(linea1) + ".csv", true);
             fileWriter.write( "\n"+line ); // Add a newline to separate lines
             fileWriter.close(); // Always close the writer after use
         } catch (IOException e) {
@@ -88,9 +89,6 @@ public class Comando {
 
         System.out.println("Listo");
     }
-
-
-  
 
     public static void end() {
         System.out.print("Program ended");
@@ -230,7 +228,7 @@ public class Comando {
                             }
                         }
                     }
-
+                    //order.sort(Comparator.naturalOrder());
                     while (scanner.hasNextLine()) {
                         try {
                             for (int i = 0; i < order.size(); i++) {
@@ -238,6 +236,7 @@ public class Comando {
 
                                 String[] temp = scanner.nextLine().split(",");
                                 String tempString = "";
+
                                 for (int x : order) {
 
                                     tempString = tempString + "," + temp[x - 1];
@@ -278,17 +277,14 @@ public class Comando {
                 }
             }
        
-    }
-                                  
-
-
+    }                           
 
     public static File getFile(String line) {
         String[] lines = line.split(" ");
         File fileError = new File("");
         for (int i = 0; i < lines.length; i++) {
             if (tableNames.contains(lines[i])) {
-                File file = new File(lines[2] + ".csv");
+                File file = new File("tables/"+lines[2] + ".csv");
                 return file;
             }
         }
@@ -344,5 +340,9 @@ public class Comando {
         }
            
 
+    }
+
+    public static void Delete(String line){
+        System.out.println("hola");
     }
 }

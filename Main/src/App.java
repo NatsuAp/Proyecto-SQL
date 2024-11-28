@@ -66,6 +66,9 @@ public class App {
                 case "columns":
                 Comando.showColumns(in);
                 break;
+                case "delete":
+                Comando.Delete(in);
+                break;
                 default:
                     if (!command.equals("ERROR")) {
                         System.out.println("Unknown command");
