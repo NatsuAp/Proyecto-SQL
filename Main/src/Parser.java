@@ -119,9 +119,6 @@ public class Parser {
         }
         return false;
     }
-
-<<<<<<< HEAD
-=======
     public static boolean ParseSelect(String input) {
         String command = "";
         Boolean j = false;
@@ -245,6 +242,5 @@ public class Parser {
         
         return false;
     }
->>>>>>> 24d4256b75a6078327ad973c6058f4ff362e02a4
 }
 
