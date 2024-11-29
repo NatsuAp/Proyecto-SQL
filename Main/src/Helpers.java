@@ -41,4 +41,13 @@ public class Helpers {
            return false;
         }
     }
+
+    public static String getLine(String line[]){
+        String newLine="";
+        for(String x: line){
+            newLine+=","+x;
+        }
+        newLine=newLine.substring(1);
+        return newLine;
+    }
 }

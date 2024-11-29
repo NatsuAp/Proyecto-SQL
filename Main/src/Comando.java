@@ -345,6 +345,67 @@ public class Comando {
     }
 
     public static void Delete(String line){
-        System.out.println("hola");
+        
+       String condition = Parser.conditionTemp;
+       String table = Parser.tableTemp;
+       String column = Parser.columnTemp;
+       String colsLine="";
+       String dataLine="";
+       int colPosition=1;
+       File file = new File("tables/"+ table + ".csv");
+       try (Scanner scanner = new Scanner(file)) {
+        FileWriter writer = new FileWriter(file, true);
+        String columns[]= scanner.nextLine().split(",");
+        colsLine = Helpers.getLine(columns);
+        for(String x:columns){
+            if(x.equals(column)){
+              break;
+            }
+            colPosition++;
+        }
+       
+        writer.write(colsLine +"\n");
+        
+            while(scanner.hasNextLine()){
+                String in[] = scanner.nextLine().split(",");
+                String data =in[colPosition];
+                if(condition.charAt(0)=='='){
+                    condition=condition.substring(1);
+                    if(data.equals(condition)){
+                        in[colPosition]= " ";
+                    }
+                }
+                if(condition.charAt(0)=='>'){
+                    condition=condition.substring(1);
+                    if(Integer.parseInt(data)>Integer.parseInt(condition)){
+                        in[colPosition]= " ";
+                    }
+                }
+                if(condition.charAt(0)=='<'){
+                    condition=condition.substring(1);
+                    if(Integer.parseInt(data)<Integer.parseInt(condition)){
+                        in[colPosition]= " ";
+                    }
+                }
+                
+                for(String x:in){
+                    dataLine+=","+x;
+                }
+                dataLine= dataLine.substring(1);
+                writer.write(dataLine + "\n");
+                    
+               
+            }
+            writer.close();
+        } catch (NumberFormatException e) {
+           System.out.println("Value in table does not contain a parsable integer");
+        }
+       
+        catch (FileNotFoundException e) {
+        System.out.println("There was an error getting the table it might have been erased or its directory might have changed");
+       } catch (IOException e1) {
+              System.out.println("Unkown Error, Try Again");
+              
+           }
     }
 }

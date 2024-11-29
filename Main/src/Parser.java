@@ -116,14 +116,15 @@ public class Parser {
                 }
 
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Errors.checkError(1, input);
+                return false;
             }
 
             return true;
         }
         return false;
     }
+    
     public static boolean ParseSelect(String input) {
         String command = "";
         Boolean j = false;
