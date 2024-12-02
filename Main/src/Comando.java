@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Comando {
-   public static String tableFolder = "tables";
+     public static String tableFolder = "tables";
     public static ArrayList<String> tableNames = new ArrayList<>();
 
 
@@ -407,5 +407,11 @@ public class Comando {
               System.out.println("Unkown Error, Try Again");
               
            }
+    }
+
+    public static void Update(String update){
+
+        
+        //recuerda vaciar los arraylist al final de este comando
     }
 }
