@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,9 +9,8 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Comando {
-   public static String tableFolder = "tables";
+    public static String tableFolder = "tables";
     public static ArrayList<String> tableNames = new ArrayList<>();
-
 
     public static void insert(String linea2, String linea1) {
         linea2 = linea2.toLowerCase();
@@ -33,11 +31,11 @@ public class Comando {
             cols[i - 3] = line1[i];
 
         }
-        String ColsNeeded = "";
+        // String ColsNeeded = "";
 
-        for (String x : cols) {
-            ColsNeeded = ColsNeeded + x + " ";
-        }
+        // for (String x : cols) {
+        // ColsNeeded = ColsNeeded + x + " ";
+        // }
 
         String fileCols = "";
         try {
@@ -52,48 +50,61 @@ public class Comando {
         fileCols = fileCols.toLowerCase();
         String[] filesCols = fileCols.split(",");
 
-        System.out.println(ColsNeeded + "colsneeded");
-        String line = "";
-        int t = 0;
-        for (int i = 0; i < filesCols.length; i++) {
-            System.out.println(filesCols[i] + "Columna");
-            System.out.println(line2[t] + " Valor ");
-            if (ColsNeeded.contains(filesCols[i])) {
-                if (i != 0) {
-                    line = line + ", " + line2[t];
-                    t = t + 1;
-                } else {
-                    line = line + line2[t];
-                    t = t + 1;
-                }
+        // String line = "";
+        //int t = 0;
+        // for (int i = 0; i < filesCols.length; i++) {
 
-            } else {
-                if (i != 0) {
-                    line =  line + " , " ;
-                } else {
-                    line = line + " ";
-                }
+        // if (ColsNeeded.contains(filesCols[i])) {
+        // if (i != 0) {
+        // line = line + "," + line2[t];
+        // t = t + 1;
+        // } else {
+        // line = line + line2[t];
+        // t = t + 1;
+        // }
 
+        // } else {
+        // if (i != 0) {
+        // line = line + "," ;
+        // } else {
+        // line = line + " ";
+        // }
+
+        // }
+
+        // }
+        String[] line = new String[filesCols.length];
+        for (int i = 0; i < cols.length; i++) {
+            for (int j = 0; j < filesCols.length; j++) {
+                if (cols[i].equals(filesCols[j])) {
+                    line[j] = line2[i];
+                }
             }
-            System.out.println(line);
         }
-        System.out.println("LINEA " + line);
+        String linea="";
+        for (int i = 0; i < line.length; i++) {
+            if (i != 0) {
+                linea = linea + "," + line[i];
+              
+            } else {
+                linea = linea + line[i];
+  
+            }
+        }
+
         FileWriter fileWriter;
         try {
             linea1 = linea1.trim();
-          
+
             fileWriter = new FileWriter(getName(linea1) + ".csv", true);
             fileWriter.write("\n" + line);
-            fileWriter.close(); 
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Listo");
+        
     }
-
-
-  
 
     public static void end() {
         System.out.print("Program ended");
@@ -132,9 +143,6 @@ public class Comando {
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 
-   
-
-
         try (FileWriter fileWriter = new FileWriter(baseFolder + "/" + filepath)) {
 
             fileWriter.write(stringBuilder.toString());
@@ -148,61 +156,59 @@ public class Comando {
     public static void help() {
         System.out.println("Available Commands:");
 
-     
+        System.out.println("-------------------");
 
-    System.out.println("-------------------");
+        // Command 1: CREATE TABLE
+        System.out.println("1. CREATE TABLE");
+        System.out.println("   Usage: CREATE TABLE table_name (");
+        System.out.println("             column_1 datatype");
+        System.out.println("             column_2 datatype");
+        System.out.println("             column_3 datatype");
+        System.out.println("          );");
+        System.out.println("   Description: Creates a new table with the specified columns and data types.");
+        System.out.println("                - Replace 'table_name' with the name of the table.");
+        System.out.println("                - Replace 'column_1', 'column_2', etc., with column names.");
+        System.out.println("                - Replace 'datatype' with the data type of each column.");
 
-    // Command 1: CREATE TABLE
-    System.out.println("1. CREATE TABLE");
-    System.out.println("   Usage: CREATE TABLE table_name (");
-    System.out.println("             column_1 datatype");
-    System.out.println("             column_2 datatype");
-    System.out.println("             column_3 datatype");
-    System.out.println("          );");
-    System.out.println("   Description: Creates a new table with the specified columns and data types.");
-    System.out.println("                - Replace 'table_name' with the name of the table.");
-    System.out.println("                - Replace 'column_1', 'column_2', etc., with column names.");
-    System.out.println("                - Replace 'datatype' with the data type of each column.");
+        System.out.println();
 
-    System.out.println();
+        // Command 2: END
+        System.out.println("2. END");
+        System.out.println("   Usage: END");
+        System.out.println("   Description: Ends the program.");
 
-    // Command 2: END
-    System.out.println("2. END");
-    System.out.println("   Usage: END");
-    System.out.println("   Description: Ends the program.");
+        System.out.println();
 
-    System.out.println();
+        // Command 3: SELECT
+        System.out.println("3. SELECT");
+        System.out.println("   Usage: SELECT column_1, column_2 FROM table_name;");
+        System.out.println("          SELECT * FROM table_name;");
+        System.out.println("   Description: Retrieves specific columns from the specified table.");
+        System.out.println("                - Replace 'column_1, column_2' with the columns you want to retrieve.");
+        System.out.println("                - Replace 'table_name' with the name of the table.");
+        System.out.println("   Example: SELECT name, age FROM employees;");
 
-    // Command 3: SELECT
-    System.out.println("3. SELECT");
-    System.out.println("   Usage: SELECT column_1, column_2 FROM table_name;");
-    System.out.println("          SELECT * FROM table_name;");
-    System.out.println("   Description: Retrieves specific columns from the specified table.");
-    System.out.println("                - Replace 'column_1, column_2' with the columns you want to retrieve.");
-    System.out.println("                - Replace 'table_name' with the name of the table.");
-    System.out.println("   Example: SELECT name, age FROM employees;");
+        System.out.println();
 
-    System.out.println();
+        // Command 4: SHOW COLUMNS
+        System.out.println("4. SHOW COLUMNS");
+        System.out.println("   Usage: SHOW COLUMNS FROM table_name;");
+        System.out.println("   Description: Displays the column names (headers) of the specified table.");
+        System.out.println("                - Replace 'table_name' with the name of the table.");
+        System.out.println("   Example: SHOW COLUMNS FROM employees;");
 
-    // Command 4: SHOW COLUMNS
-    System.out.println("4. SHOW COLUMNS");
-    System.out.println("   Usage: SHOW COLUMNS FROM table_name;");
-    System.out.println("   Description: Displays the column names (headers) of the specified table.");
-    System.out.println("                - Replace 'table_name' with the name of the table.");
-    System.out.println("   Example: SHOW COLUMNS FROM employees;");
+        System.out.println();
 
-    System.out.println();
+        // Command 5: SHOW TABLES
+        System.out.println("5. SHOW TABLES");
+        System.out.println("   Usage: SHOW TABLES;");
+        System.out.println("   Description: Lists all available tables in the current workspace.");
+        System.out.println("   Example: SHOW TABLES;");
 
-    // Command 5: SHOW TABLES
-    System.out.println("5. SHOW TABLES");
-    System.out.println("   Usage: SHOW TABLES;");
-    System.out.println("   Description: Lists all available tables in the current workspace.");
-    System.out.println("   Example: SHOW TABLES;");
+        System.out.println();
 
-    System.out.println();
-
-    // Reminder to type 'help' again
-    System.out.println("Type 'help' anytime to see this list again.");
+        // Reminder to type 'help' again
+        System.out.println("Type 'help' anytime to see this list again.");
 
     }
 
@@ -216,82 +222,74 @@ public class Comando {
 
         String columns = input.substring(0, input.toLowerCase().indexOf("from")).trim();
         String table = input.substring(input.toLowerCase().indexOf("from") + 4).trim();
-        File file = new File("tables/"+ table + ".csv");
-        
-       
+        File file = new File("tables/" + table + ".csv");
 
-            String[] columnIn = columns.replaceAll("\\s", "").split(",");
-            if (!columns.equals("*")) {
-                
-                try (Scanner scanner = new Scanner(file)) {
-                    String[] columnFile = scanner.nextLine().trim().split(",");
-                    
-                    for (int i = 0; i < columnIn.length; i++) {
-                        for (int j = 0; j < columnFile.length; j++) {
-                            if (columnIn[i].equals(columnFile[j])) {
-                                order.add(j + 1);
-                            }
+        String[] columnIn = columns.replaceAll("\\s", "").split(",");
+        if (!columns.equals("*")) {
+
+            try (Scanner scanner = new Scanner(file)) {
+                String[] columnFile = scanner.nextLine().trim().split(",");
+
+                for (int i = 0; i < columnIn.length; i++) {
+                    for (int j = 0; j < columnFile.length; j++) {
+                        if (columnIn[i].equals(columnFile[j])) {
+                            order.add(j + 1);
                         }
                     }
+                }
 
-                    while (scanner.hasNextLine()) {
-                        try {
-                            for (int i = 0; i < order.size(); i++) {
+                while (scanner.hasNextLine()) {
+                    try {
+                        for (int i = 0; i < order.size(); i++) {
 
+                            String[] temp = scanner.nextLine().split(",");
+                            String tempString = "";
+                            for (int x : order) {
 
-                                String[] temp = scanner.nextLine().split(",");
-                                String tempString = "";
-                                for (int x : order) {
-
-                                    tempString = tempString + "," + temp[x - 1];
-                                    tempString = tempString.replaceAll("\\s", "");
-                                                                  }
-                                rows.add(tempString.substring(1));
+                                tempString = tempString + "," + temp[x - 1];
+                                tempString = tempString.replaceAll("\\s", "");
                             }
-                        } catch (NoSuchElementException e) {
-                            System.out.println(columns);
-                            for (int i = 0; i < rows.size(); i++) {
-                                System.out.println(rows.get(i));
-                            }
-                            return;
+                            rows.add(tempString.substring(1));
                         }
-
+                    } catch (NoSuchElementException e) {
+                        System.out.println(columns);
+                        for (int i = 0; i < rows.size(); i++) {
+                            System.out.println(rows.get(i));
+                        }
+                        return;
                     }
-                    columns = columns.replaceAll("\\s", "");
-                    System.out.println(columns);
-                    for (int i = 0; i < rows.size(); i++) {
-                        System.out.println(rows.get(i));
-                    }
-
-                } catch (FileNotFoundException e) {
-                   
-                }
-            } else {
-               
-                try (Scanner scanner = new Scanner(file)) {
-                    while (scanner.hasNextLine()){
-                        System.out.println(scanner.nextLine());
-                        
-                    }
-                    
-                  
-                   
-                } catch (FileNotFoundException e) {
 
                 }
+                columns = columns.replaceAll("\\s", "");
+                System.out.println(columns);
+                for (int i = 0; i < rows.size(); i++) {
+                    System.out.println(rows.get(i));
+                }
+
+            } catch (FileNotFoundException e) {
+
             }
-       
+        } else {
+
+            try (Scanner scanner = new Scanner(file)) {
+                while (scanner.hasNextLine()) {
+                    System.out.println(scanner.nextLine());
+
+                }
+
+            } catch (FileNotFoundException e) {
+
+            }
+        }
+
     }
-                                  
-
-
 
     public static File getFile(String line) {
         String[] lines = line.split(" ");
         File fileError = new File("");
         for (int i = 0; i < lines.length; i++) {
             if (tableNames.contains(lines[i])) {
-                File file = new File(lines[2] + ".csv");
+                File file = new File("tables/" + lines[2] + ".csv");
                 return file;
             }
         }
@@ -308,44 +306,38 @@ public class Comando {
         return lines[0];
     }
 
-    public static void listTables(){
+    public static void listTables() {
 
-        
-        if(tableNames.isEmpty()){
+        if (tableNames.isEmpty()) {
             System.out.println("You do not have any tables at the moment");
-        }else{
-            
-        System.out.println("Available Tables:");
-        System.out.println("-----------------");
-        for(String x: tableNames){
-            System.out.println("-"+x+".csv");
+        } else {
+
+            System.out.println("Available Tables:");
+            System.out.println("-----------------");
+            for (String x : tableNames) {
+                System.out.println("-" + x + ".csv");
+            }
         }
-        }
-    
-        
 
     }
 
-    public static void showColumns(String line){
+    public static void showColumns(String line) {
         String in = line.replaceAll("\\s", "");
         String table = in.replace("showcolumnsfrom", "");
-        File file = new File("tables/"+table+".csv");
-         
-         
-        try(Scanner scanner = new Scanner(file)){
-            String[]columns = scanner.nextLine().split(",");
-            System.out.println("Table: " + table+".csv");
-         System.out.println("Columns:");
-         System.out.println("------------------------------");
-         for(String x: columns){
-            System.out.println("- " + x.trim());
-         }
+        File file = new File("tables/" + table + ".csv");
 
+        try (Scanner scanner = new Scanner(file)) {
+            String[] columns = scanner.nextLine().split(",");
+            System.out.println("Table: " + table + ".csv");
+            System.out.println("Columns:");
+            System.out.println("------------------------------");
+            for (String x : columns) {
+                System.out.println("- " + x.trim());
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("There was an error accessing the File: " + table + ".csv");
         }
-        catch(FileNotFoundException e){
-            System.out.println("There was an error accessing the File: "+ table+".csv");
-        }
-           
 
     }
 }
