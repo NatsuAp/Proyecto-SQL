@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import java.util.NoSuchElementException;
 
 import java.util.Scanner;
@@ -95,10 +96,10 @@ public class Comando {
         FileWriter fileWriter;
         try {
             linea1 = linea1.trim();
-
+          
             fileWriter = new FileWriter(getName(linea1) + ".csv", true);
             fileWriter.write("\n" + line);
-            fileWriter.close();
+            fileWriter.close(); 
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -224,27 +225,28 @@ public class Comando {
         String table = input.substring(input.toLowerCase().indexOf("from") + 4).trim();
         File file = new File("tables/" + table + ".csv");
 
-        String[] columnIn = columns.replaceAll("\\s", "").split(",");
-        if (!columns.equals("*")) {
-
-            try (Scanner scanner = new Scanner(file)) {
-                String[] columnFile = scanner.nextLine().trim().split(",");
-
-                for (int i = 0; i < columnIn.length; i++) {
-                    for (int j = 0; j < columnFile.length; j++) {
-                        if (columnIn[i].equals(columnFile[j])) {
-                            order.add(j + 1);
+            String[] columnIn = columns.replaceAll("\\s", "").split(",");
+            if (!columns.equals("*")) {
+                
+                try (Scanner scanner = new Scanner(file)) {
+                    String[] columnFile = scanner.nextLine().trim().split(",");
+                    
+                    for (int i = 0; i < columnIn.length; i++) {
+                        for (int j = 0; j < columnFile.length; j++) {
+                            if (columnIn[i].equals(columnFile[j])) {
+                                order.add(j + 1);
+                            }
                         }
                     }
-                }
+                    //order.sort(Comparator.naturalOrder());
+                    while (scanner.hasNextLine()) {
+                        try {
+                            for (int i = 0; i < order.size(); i++) {
 
-                while (scanner.hasNextLine()) {
-                    try {
-                        for (int i = 0; i < order.size(); i++) {
 
-                            String[] temp = scanner.nextLine().split(",");
-                            String tempString = "";
-                            for (int x : order) {
+                                String[] temp = scanner.nextLine().split(",");
+                                String tempString = "";
+                                for (int x : order) {
 
                                 tempString = tempString + "," + temp[x - 1];
                                 tempString = tempString.replaceAll("\\s", "");
@@ -338,6 +340,72 @@ public class Comando {
         } catch (FileNotFoundException e) {
             System.out.println("There was an error accessing the File: " + table + ".csv");
         }
+           
 
+    }
+
+    public static void Delete(String line){
+        
+       String condition = Parser.conditionTemp;
+       String table = Parser.tableTemp;
+       String column = Parser.columnTemp;
+       String colsLine="";
+       String dataLine="";
+       int colPosition=1;
+       File file = new File("tables/"+ table + ".csv");
+       try (Scanner scanner = new Scanner(file)) {
+        FileWriter writer = new FileWriter(file, true);
+        String columns[]= scanner.nextLine().split(",");
+        colsLine = Helpers.getLine(columns);
+        for(String x:columns){
+            if(x.equals(column)){
+              break;
+            }
+            colPosition++;
+        }
+       
+        writer.write(colsLine +"\n");
+        
+            while(scanner.hasNextLine()){
+                String in[] = scanner.nextLine().split(",");
+                String data =in[colPosition];
+                if(condition.charAt(0)=='='){
+                    condition=condition.substring(1);
+                    if(data.equals(condition)){
+                        in[colPosition]= " ";
+                    }
+                }
+                if(condition.charAt(0)=='>'){
+                    condition=condition.substring(1);
+                    if(Integer.parseInt(data)>Integer.parseInt(condition)){
+                        in[colPosition]= " ";
+                    }
+                }
+                if(condition.charAt(0)=='<'){
+                    condition=condition.substring(1);
+                    if(Integer.parseInt(data)<Integer.parseInt(condition)){
+                        in[colPosition]= " ";
+                    }
+                }
+                
+                for(String x:in){
+                    dataLine+=","+x;
+                }
+                dataLine= dataLine.substring(1);
+                writer.write(dataLine + "\n");
+                    
+               
+            }
+            writer.close();
+        } catch (NumberFormatException e) {
+           System.out.println("Value in table does not contain a parsable integer");
+        }
+       
+        catch (FileNotFoundException e) {
+        System.out.println("There was an error getting the table it might have been erased or its directory might have changed");
+       } catch (IOException e1) {
+              System.out.println("Unkown Error, Try Again");
+              
+           }
     }
 }
