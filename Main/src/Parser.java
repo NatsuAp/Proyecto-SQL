@@ -89,15 +89,14 @@ public class Parser {
         
         if (in2[0].equals("insert") && in2[1].equals("into")) {
 
-            System.out.println(in2[2]);
-            System.out.println(in2[3]);
+           
             if (in2[2].isEmpty() || in2[3].isEmpty()) {
-                Errors.checkError(62, input);
+                Errors.checkError(6, input);
                 return false;
             }
 
             if (!Comando.tableNames.contains(in2[2])) {
-                Errors.checkError(1, input);
+                Errors.checkError(6, input);
                 return false;
             }
             File file = new File("tables/" + in2[2] + ".csv");
@@ -109,14 +108,14 @@ public class Parser {
                 scanner.close();
                 for (int i = 3; i < in2.length; i++) {
                     if (!col.contains(in2[i])) {
-                        System.out.println(in2[i]);
-                        Errors.checkError(1, input);
+                        
+                        Errors.checkError(6, input);
                         return false;
                     }
                 }
 
             } catch (FileNotFoundException e) {
-                Errors.checkError(1, input);
+                Errors.checkError(6, input);
                 return false;
             }
 
