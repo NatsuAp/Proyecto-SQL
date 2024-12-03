@@ -409,7 +409,7 @@ public class Comando {
            }
     }
 
-    public static void Update(String update){
+    public static void Update(){
 
         
         //recuerda vaciar los arraylist al final de este comando

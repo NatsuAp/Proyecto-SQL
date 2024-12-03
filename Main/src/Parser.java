@@ -41,9 +41,10 @@ public class Parser {
         if (parseShowColumns(input)) {
             return "columns";
         }
-        if(parseUpdate(input)){
+        if(updateParser.parseUpdate(input)){
             return "update";
         }
+        
         return "";
     }
 
@@ -311,46 +312,8 @@ public class Parser {
         return false;
     }
 
-    public static boolean parseUpdate(String input){
-        
-        String in[] = input.split(" ");
-        String line="";
-        try{
-            if(in[0].toLowerCase().equals("update") && Helpers.checkTableExist(in[1])){
-                tableTemp = in[1];
-                line = App.scanner.nextLine();
-                if(line.substring(0, 4).toLowerCase().equals("set ")){
-                    input =line.substring(4);
-                    String info[] = input.split(",");
-                    for(String x:info){
-                        String temp[] = x.split("=");
-                        if(Helpers.checkColumnExist(tableTemp, temp[0])){
-                            
-                            columns.add(temp[0]);
-                            newInfo.add(temp[1]);
-                        }
-                        
-
-                    }
-                    line=App.scanner.nextLine();
-                    if(line.substring(0, 6).toLowerCase().equals("where ")){
-                        input = line.substring(6);
-                        String temp2[]=input.split("=");
-
-
-                    }
-                }
-
-                
-            }
-                
-            
-        } catch (Exception e) {
-           return false;
-        }
-        
-        return false;
-    }
+   
+    
     
     
 }

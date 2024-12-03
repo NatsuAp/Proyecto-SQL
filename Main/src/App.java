@@ -73,7 +73,18 @@ public class App {
                 Comando.Delete(in);
                 break;
                 case "update":
-                input= scanner.nextLine();
+                    
+                    String line2 = scanner.nextLine();
+                    if(updateParser.parseUpdate2(line2)){
+                        String line3 = scanner.nextLine();
+                        if(updateParser.parseUpdate3(line3)){
+                           Comando.Update();
+                        }
+                        
+                    }
+                    
+                    
+                
                 
 
 
