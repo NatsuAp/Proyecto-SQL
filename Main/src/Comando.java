@@ -11,7 +11,9 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Comando {
-    public static String tableFolder = "tables";
+
+     public static String tableFolder = "tables";
+
     public static ArrayList<String> tableNames = new ArrayList<>();
 
     public static void insert(String linea2, String linea1) {
@@ -435,5 +437,11 @@ public class Comando {
             System.out.println("No records match the specified criteria in " + table + ", No changes were made.");
         }
 
+    }
+
+    public static void Update(){
+
+        
+        //recuerda vaciar los arraylist al final de este comando
     }
 }

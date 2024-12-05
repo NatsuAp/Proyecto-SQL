@@ -8,8 +8,12 @@ public class Parser {
     public static String columnTemp ="";
     public static String tableTemp="";
     public static String conditionTemp="";
+    public static ArrayList<String>  columns = new ArrayList<>();
+
+    public static ArrayList<String>  newInfo = new ArrayList<>();
 
     public static String parseInput(String input) {
+        
         if (parseDelete(input)) {
             return "delete";
         }
@@ -37,7 +41,10 @@ public class Parser {
         if (parseShowColumns(input)) {
             return "columns";
         }
-
+        if(UpdateParser.parseUpdate(input)){
+            return "update";
+        }
+        
         return "";
     }
 
@@ -306,5 +313,10 @@ public class Parser {
 
         return false;
     }
+
+   
+    
+    
+    
 }
 
