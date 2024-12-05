@@ -4,8 +4,20 @@ import java.util.Scanner;
 
 public class Helpers {
     int[] nums = {1,2,3,4,5,6,7,8,9};
-    
+
+    public static Number getNumber(String num){
+        try{
+           double x =  Double.parseDouble(num);
+            return x;
+        }
+        catch(NumberFormatException e){
+            int x = Integer.parseInt(num);
+            return x;
+        }
         
+    }
+    
+
     
 
     public static boolean checkTableExist(String table){

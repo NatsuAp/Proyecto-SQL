@@ -256,7 +256,7 @@ public class Parser {
                 }
                 
                 if (Helpers.checkTableExist(table)) {
-                    System.out.println("2");
+                    
                     input = input.replaceFirst(table, "");
                     input = input.substring(1);
                     if (input.substring(0, 5).equals("where")) {
@@ -291,14 +291,16 @@ public class Parser {
                         
                         return true;
                     } else {
-                        System.out.println("Error 9: Table does not exist");
+                        System.out.println("Error 9: Column does not exist");
                         return false;
                     }
 
+                }else{
+                    System.out.println("Error 10: Table does not exist");
                 }
             }
         } catch (Exception e) {
-            Errors.checkError(1, input);
+            
             return false;
         }
 
