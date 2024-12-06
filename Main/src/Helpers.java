@@ -62,4 +62,26 @@ public class Helpers {
         newLine=newLine.substring(1);
         return newLine;
     }
+
+    public static int getColumnPosition(String table, String column){
+        if(checkColumnExist(table, column)){
+            File file = new File("tables/"+table+".csv");
+            int i=1;
+         try (Scanner scanner = new Scanner(file)) {
+            String columns[] = scanner.nextLine().split(",");
+            for(String x: columns){
+             if(x.equals(column)){
+                return i;
+             }
+             i+=1;
+            }
+            
+            
+         } catch (FileNotFoundException e) {
+             
+           return 0;
+         }
+        }
+        return 0;
+    }
 }

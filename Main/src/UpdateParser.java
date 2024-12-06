@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class updateParser {
+public class UpdateParser {
     public static String columnTemp = "";
     public static String tableTemp = "";
     public static String conditionTemp = "";

@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Comando {
 
-     public static String tableFolder = "tables";
+    public static String tableFolder = "tables";
 
     public static ArrayList<String> tableNames = new ArrayList<>();
 
@@ -439,9 +439,63 @@ public class Comando {
 
     }
 
-    public static void Update(){
+    public static void Update() {
 
+        ArrayList<String> lines = new ArrayList<>();
+        String table = UpdateParser.tableTemp;
+        File file = new File("tables/" + table + ".csv");
+        ArrayList<String> columns = new ArrayList<>();
+        for(String l:UpdateParser.columns){
+            columns.add(l);
+        }
         
-        //recuerda vaciar los arraylist al final de este comando
+        ArrayList<String> newInfo = new ArrayList<>();
+        for(String l:UpdateParser.newInfo){
+            newInfo.add(l);
+        }
+        String toChangeColumn = UpdateParser.toChangeColumn;
+        String toChangeColumnWhere = UpdateParser.toChangeColumnWhere;
+        String line = "";
+        int k = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            // String columnsLine = lines.get(0);
+            // String colsArr[] = columnsLine.split(",");
+            int x = Helpers.getColumnPosition(table, toChangeColumn);
+            for (int i = 1; i < lines.size(); i++) {
+                String linesArr[] = lines.get(i).split(",");
+                if (linesArr[x-1].equals(String.valueOf(toChangeColumnWhere))) {
+                    for (String X : columns) {
+                        int j = Helpers.getColumnPosition(table, X);
+
+                        linesArr[j-1] = newInfo.get(k);
+                        k += 1;
+
+                    }
+                    line="";
+                    for(String g: linesArr){
+                        line+=","+g;
+                    }
+                    line = line.substring(1);
+                    lines.set(i, line);
+
+                }
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            for(String h:lines){
+                writer.write(h);
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (Exception e) {
+
+        }
+        UpdateParser.columns.clear();
+        UpdateParser.newInfo.clear();
+       
     }
 }
