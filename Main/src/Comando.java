@@ -1,15 +1,25 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+
+
+import java.io.FileReader;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.NoSuchElementException;
 
 import java.util.Scanner;
 
 public class Comando {
+
+    public static String tableFolder = "tables";
+    public static ArrayList<String> tableNames = new ArrayList<>();
+
+
+
     public static String tableFolder = "tables";
     public static ArrayList<String> tableNames = new ArrayList<>();
 
@@ -88,18 +98,28 @@ public class Comando {
                 linea = linea + "," + line[i];
               
             } else {
+
                 linea = linea + line[i];
   
+
+                if (i != 0) {
+                    line = line + " , ";
+                } else {
+                    line = line + " ";
+                }
+
+
             }
         }
 
         FileWriter fileWriter;
         try {
-            linea1 = linea1.trim();
-          
-            fileWriter = new FileWriter(getName(linea1) + ".csv", true);
-            fileWriter.write("\n" + line);
-            fileWriter.close(); 
+
+            // Open the file in append mode by passing 'true' as the second argument
+            fileWriter = new FileWriter("tables/" + getName(linea1) + ".csv", true);
+            fileWriter.write("\n" + line); // Add a newline to separate lines
+            fileWriter.close(); // Always close the writer after use
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -225,28 +245,29 @@ public class Comando {
         String table = input.substring(input.toLowerCase().indexOf("from") + 4).trim();
         File file = new File("tables/" + table + ".csv");
 
-            String[] columnIn = columns.replaceAll("\\s", "").split(",");
-            if (!columns.equals("*")) {
-                
-                try (Scanner scanner = new Scanner(file)) {
-                    String[] columnFile = scanner.nextLine().trim().split(",");
-                    
-                    for (int i = 0; i < columnIn.length; i++) {
-                        for (int j = 0; j < columnFile.length; j++) {
-                            if (columnIn[i].equals(columnFile[j])) {
-                                order.add(j + 1);
-                            }
+        String[] columnIn = columns.replaceAll("\\s", "").split(",");
+        if (!columns.equals("*")) {
+
+            try (Scanner scanner = new Scanner(file)) {
+                String[] columnFile = scanner.nextLine().trim().split(",");
+
+                for (int i = 0; i < columnIn.length; i++) {
+                    for (int j = 0; j < columnFile.length; j++) {
+                        if (columnIn[i].equals(columnFile[j])) {
+                            order.add(j + 1);
                         }
                     }
-                    //order.sort(Comparator.naturalOrder());
-                    while (scanner.hasNextLine()) {
-                        try {
-                            for (int i = 0; i < order.size(); i++) {
+                }
+                // order.sort(Comparator.naturalOrder());
+                while (scanner.hasNextLine()) {
+                    try {
+                        for (int i = 0; i < order.size(); i++) {
 
 
-                                String[] temp = scanner.nextLine().split(",");
-                                String tempString = "";
-                                for (int x : order) {
+                            String[] temp = scanner.nextLine().split(",");
+                            String tempString = "";
+                            for (int x : order) {
+
 
                                 tempString = tempString + "," + temp[x - 1];
                                 tempString = tempString.replaceAll("\\s", "");
@@ -340,72 +361,177 @@ public class Comando {
         } catch (FileNotFoundException e) {
             System.out.println("There was an error accessing the File: " + table + ".csv");
         }
-           
+
 
     }
 
-    public static void Delete(String line){
-        
-       String condition = Parser.conditionTemp;
-       String table = Parser.tableTemp;
-       String column = Parser.columnTemp;
-       String colsLine="";
-       String dataLine="";
-       int colPosition=1;
-       File file = new File("tables/"+ table + ".csv");
-       try (Scanner scanner = new Scanner(file)) {
-        FileWriter writer = new FileWriter(file, true);
-        String columns[]= scanner.nextLine().split(",");
-        colsLine = Helpers.getLine(columns);
-        for(String x:columns){
-            if(x.equals(column)){
-              break;
+    public static void Delete(String input) {
+
+        String condition = Parser.conditionTemp;
+        String table = Parser.tableTemp;
+        String column = Parser.columnTemp;
+        String sign = String.valueOf(condition.charAt(0));
+        condition = condition.substring(1);
+        String colsLine = "";
+        String dataLine = "";
+
+        String line = "";
+        int count = 0;
+
+        int colPosition = 0; // empieza en 0 No CAMBIAR
+        File file = new File("tables/" + table + ".csv");
+        File tempFile = new File("tables/" + table + "_temp.csv");
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile, false));
+            String columns[] = reader.readLine().split(",");
+            colsLine = Helpers.getLine(columns);
+            for (String x : columns) {
+                if (x.equals(column)) {
+                    break;
+                }
+                colPosition++;
             }
-            colPosition++;
-        }
-       
-        writer.write(colsLine +"\n");
-        
-            while(scanner.hasNextLine()){
-                String in[] = scanner.nextLine().split(",");
-                String data =in[colPosition];
-                if(condition.charAt(0)=='='){
-                    condition=condition.substring(1);
-                    if(data.equals(condition)){
-                        in[colPosition]= " ";
-                    }
+            writer.write(colsLine);
+            writer.newLine();
+
+            while ((line = reader.readLine()) != null) {
+                String in[] = line.split(",");
+                String data = in[colPosition];
+
+                switch (sign) {
+                    case "=":
+                        if (Character.isDigit(condition.charAt(0))) {
+
+                            if (Helpers.getNumber(data).doubleValue() == Helpers.getNumber(condition).doubleValue()) {
+                                in[colPosition] = " ";
+                                count += 1;
+                            }
+                        } else {
+                            if (data.equals(condition)) {
+                                in[colPosition] = " ";
+                                count += 1;
+                            }
+                        }
+
+                        break;
+                    case ">":
+                        if (Helpers.getNumber(data).doubleValue() > Helpers.getNumber(condition).doubleValue()) {
+                            in[colPosition] = " ";
+                            count += 1;
+                        }
+                        break;
+                    case "<":
+                        if (Helpers.getNumber(data).doubleValue() < Helpers.getNumber(condition).doubleValue()) {
+                            in[colPosition] = " ";
+                            count += 1;
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                if(condition.charAt(0)=='>'){
-                    condition=condition.substring(1);
-                    if(Integer.parseInt(data)>Integer.parseInt(condition)){
-                        in[colPosition]= " ";
-                    }
+
+                for (String x : in) {
+                    dataLine += "," + x;
                 }
-                if(condition.charAt(0)=='<'){
-                    condition=condition.substring(1);
-                    if(Integer.parseInt(data)<Integer.parseInt(condition)){
-                        in[colPosition]= " ";
-                    }
-                }
-                
-                for(String x:in){
-                    dataLine+=","+x;
-                }
-                dataLine= dataLine.substring(1);
-                writer.write(dataLine + "\n");
-                    
-               
+                dataLine = dataLine.substring(1);
+
+                writer.write(dataLine);
+                writer.newLine();
+                dataLine = "";
+
             }
+
             writer.close();
+
         } catch (NumberFormatException e) {
-           System.out.println("Value in table does not contain a parsable integer");
+            System.out.println("Value in table does not contain a parsable integer");
         }
-       
+
         catch (FileNotFoundException e) {
-        System.out.println("There was an error getting the table it might have been erased or its directory might have changed");
-       } catch (IOException e1) {
-              System.out.println("Unkown Error, Try Again");
-              
-           }
+            System.out.println(
+                    "There was an error getting the table it might have been erased or its directory might have changed");
+        } catch (IOException e1) {
+            System.out.println("Unkown Error, Try Again");
+
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(tempFile))) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (Exception e) {
+            System.out.println("There was an error");
+        }
+
+        tempFile.delete();
+        if (count > 0) {
+            System.out.println("Successfully deleted " + count + " records from " + table);
+        } else {
+            System.out.println("No records match the specified criteria in " + table + ", No changes were made.");
+        }
+
+    }
+
+    public static void Update() {
+
+        ArrayList<String> lines = new ArrayList<>();
+        String table = UpdateParser.tableTemp;
+        File file = new File("tables/" + table + ".csv");
+        ArrayList<String> columns = new ArrayList<>();
+        for(String l:UpdateParser.columns){
+            columns.add(l);
+        }
+        
+        ArrayList<String> newInfo = new ArrayList<>();
+        for(String l:UpdateParser.newInfo){
+            newInfo.add(l);
+        }
+        String toChangeColumn = UpdateParser.toChangeColumn;
+        String toChangeColumnWhere = UpdateParser.toChangeColumnWhere;
+        String line = "";
+        int k = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            // String columnsLine = lines.get(0);
+            // String colsArr[] = columnsLine.split(",");
+            int x = Helpers.getColumnPosition(table, toChangeColumn);
+            for (int i = 1; i < lines.size(); i++) {
+                String linesArr[] = lines.get(i).split(",");
+                if (linesArr[x-1].equals(String.valueOf(toChangeColumnWhere))) {
+                    for (String X : columns) {
+                        int j = Helpers.getColumnPosition(table, X);
+
+                        linesArr[j-1] = newInfo.get(k);
+                        k += 1;
+
+                    }
+                    line="";
+                    for(String g: linesArr){
+                        line+=","+g;
+                    }
+                    line = line.substring(1);
+                    lines.set(i, line);
+
+                }
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            for(String h:lines){
+                writer.write(h);
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (Exception e) {
+
+        }
+        UpdateParser.columns.clear();
+        UpdateParser.newInfo.clear();
+       
     }
 }

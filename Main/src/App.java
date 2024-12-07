@@ -9,10 +9,10 @@ public class App {
     public static String in = "";
     public static String line = "";
     public static String command;
-
+     public static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
         System.out.println("Program Initialized");
-        Scanner scanner = new Scanner(System.in);
+        
         while (a) {
             input = scanner.nextLine();
 
@@ -71,6 +71,23 @@ public class App {
                 break;
                 case "delete":
                 Comando.Delete(in);
+                break;
+                case "update":
+                    
+                    String line2 = scanner.nextLine();
+                    if(UpdateParser.parseUpdate2(line2)){
+                        String line3 = scanner.nextLine();
+                        if(UpdateParser.parseUpdate3(line3)){
+                           Comando.Update();
+                        }
+                        
+                    }
+                    
+                    
+                
+                
+
+
                 break;
                 default:
                     if (!command.equals("ERROR")) {
