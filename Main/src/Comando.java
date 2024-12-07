@@ -20,8 +20,7 @@ public class Comando {
 
 
 
-    public static String tableFolder = "tables";
-    public static ArrayList<String> tableNames = new ArrayList<>();
+
 
     public static void insert(String linea2, String linea1) {
         linea2 = linea2.toLowerCase();
@@ -92,6 +91,13 @@ public class Comando {
                 }
             }
         }
+
+        for(int i = 0; i<line.length; i++){
+            if (line[i] == null) {
+                line[i] = " ";
+            }
+        }
+
         String linea="";
         for (int i = 0; i < line.length; i++) {
             if (i != 0) {
@@ -100,24 +106,16 @@ public class Comando {
             } else {
 
                 linea = linea + line[i];
-  
-
-                if (i != 0) {
-                    line = line + " , ";
-                } else {
-                    line = line + " ";
-                }
-
-
             }
         }
+        System.out.println(linea);
 
         FileWriter fileWriter;
         try {
 
             // Open the file in append mode by passing 'true' as the second argument
             fileWriter = new FileWriter("tables/" + getName(linea1) + ".csv", true);
-            fileWriter.write("\n" + line); // Add a newline to separate lines
+            fileWriter.write("\n" + linea); // Add a newline to separate lines
             fileWriter.close(); // Always close the writer after use
 
         } catch (IOException e) {
@@ -476,7 +474,7 @@ public class Comando {
     }
 
     public static void Update() {
-
+        int p=0;
         ArrayList<String> lines = new ArrayList<>();
         String table = UpdateParser.tableTemp;
         File file = new File("tables/" + table + ".csv");
@@ -504,6 +502,7 @@ public class Comando {
             for (int i = 1; i < lines.size(); i++) {
                 String linesArr[] = lines.get(i).split(",");
                 if (linesArr[x-1].equals(String.valueOf(toChangeColumnWhere))) {
+                    p+=1;
                     for (String X : columns) {
                         int j = Helpers.getColumnPosition(table, X);
 
@@ -529,6 +528,9 @@ public class Comando {
             writer.close();
         } catch (Exception e) {
 
+        }
+        if(p==0){
+            System.out.println("No value matched the one given, no change were made");
         }
         UpdateParser.columns.clear();
         UpdateParser.newInfo.clear();

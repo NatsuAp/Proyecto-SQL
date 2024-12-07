@@ -66,6 +66,8 @@ public class UpdateParser {
                    toChangeColumn = temp2[0];
                     toChangeColumnWhere =temp2[1];
                     return true;
+                }else{
+                    System.out.println("Column does not exist");
                 }
     
     
