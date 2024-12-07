@@ -2,7 +2,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+
+
 import java.io.FileReader;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +16,11 @@ import java.util.Scanner;
 public class Comando {
 
     public static String tableFolder = "tables";
+    public static ArrayList<String> tableNames = new ArrayList<>();
 
+
+
+    public static String tableFolder = "tables";
     public static ArrayList<String> tableNames = new ArrayList<>();
 
     public static void insert(String linea2, String linea1) {
@@ -35,11 +42,11 @@ public class Comando {
             cols[i - 3] = line1[i];
 
         }
-        String ColsNeeded = "";
+        // String ColsNeeded = "";
 
-        for (String x : cols) {
-            ColsNeeded = ColsNeeded + x + " ";
-        }
+        // for (String x : cols) {
+        // ColsNeeded = ColsNeeded + x + " ";
+        // }
 
         String fileCols = "";
         try {
@@ -54,43 +61,70 @@ public class Comando {
         fileCols = fileCols.toLowerCase();
         String[] filesCols = fileCols.split(",");
 
-        System.out.println(ColsNeeded + "colsneeded");
-        String line = "";
-        int t = 0;
-        for (int i = 0; i < filesCols.length; i++) {
-            System.out.println(filesCols[i] + "Columna");
-            System.out.println(line2[t] + " Valor ");
-            if (ColsNeeded.contains(filesCols[i])) {
-                if (i != 0) {
-                    line = line + ", " + line2[t];
-                    t = t + 1;
-                } else {
-                    line = line + line2[t];
-                    t = t + 1;
-                }
+        // String line = "";
+        //int t = 0;
+        // for (int i = 0; i < filesCols.length; i++) {
 
+        // if (ColsNeeded.contains(filesCols[i])) {
+        // if (i != 0) {
+        // line = line + "," + line2[t];
+        // t = t + 1;
+        // } else {
+        // line = line + line2[t];
+        // t = t + 1;
+        // }
+
+        // } else {
+        // if (i != 0) {
+        // line = line + "," ;
+        // } else {
+        // line = line + " ";
+        // }
+
+        // }
+
+        // }
+        String[] line = new String[filesCols.length];
+        for (int i = 0; i < cols.length; i++) {
+            for (int j = 0; j < filesCols.length; j++) {
+                if (cols[i].equals(filesCols[j])) {
+                    line[j] = line2[i];
+                }
+            }
+        }
+        String linea="";
+        for (int i = 0; i < line.length; i++) {
+            if (i != 0) {
+                linea = linea + "," + line[i];
+              
             } else {
+
+                linea = linea + line[i];
+  
+
                 if (i != 0) {
                     line = line + " , ";
                 } else {
                     line = line + " ";
                 }
 
+
             }
-            System.out.println(line);
         }
-        System.out.println("LINEA " + line);
+
         FileWriter fileWriter;
         try {
+
             // Open the file in append mode by passing 'true' as the second argument
             fileWriter = new FileWriter("tables/" + getName(linea1) + ".csv", true);
             fileWriter.write("\n" + line); // Add a newline to separate lines
             fileWriter.close(); // Always close the writer after use
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Listo");
+        
     }
 
     public static void end() {
@@ -229,10 +263,11 @@ public class Comando {
                     try {
                         for (int i = 0; i < order.size(); i++) {
 
+
                             String[] temp = scanner.nextLine().split(",");
                             String tempString = "";
-
                             for (int x : order) {
+
 
                                 tempString = tempString + "," + temp[x - 1];
                                 tempString = tempString.replaceAll("\\s", "");
@@ -326,6 +361,7 @@ public class Comando {
         } catch (FileNotFoundException e) {
             System.out.println("There was an error accessing the File: " + table + ".csv");
         }
+
 
     }
 

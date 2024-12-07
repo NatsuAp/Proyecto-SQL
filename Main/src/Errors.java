@@ -49,6 +49,11 @@ public class Errors {
             }
 
         }
+        if(x==6){
+            if(input.equals("")){
+                System.out.println("Error " + 6 + ": CODE ERROR");
+            }
+        }
         return false;
 
     }
