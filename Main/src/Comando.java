@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class Comando {
 
     public static String tableFolder = "tables";
-    public static ArrayList<String> tableNames = new ArrayList<>();
+    public static ArrayList<String> tableNames = null;
 
 
 

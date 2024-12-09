@@ -1,4 +1,6 @@
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 //com ousar system.out y system.flush
@@ -10,7 +12,21 @@ public class App {
     public static String line = "";
     public static String command;
      public static Scanner scanner = new Scanner(System.in);
+
+     public static void setup(){
+        File file = new File("tables/");
+        File files[] = file.listFiles();
+        ArrayList<String> tableNames = new ArrayList<>();
+        for(File x: files){
+            String temp = x.getName().split("\\.")[0];
+
+            tableNames.add(temp);
+            
+        }
+        Comando.tableNames=tableNames;
+     }
     public static void main(String[] args) {
+        setup();
         System.out.println("Program Initialized");
         
         while (a) {
