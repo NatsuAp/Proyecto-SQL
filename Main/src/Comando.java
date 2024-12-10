@@ -502,11 +502,14 @@ public class Comando {
 
     public static void DropTable(String input) {
         input = input.toLowerCase();
+
         File file = new File("tables/" + getName(input) + ".csv");
         if (file.delete()) {
             System.out.println("Archivo eliminado");
         } else {
             System.out.println("No se pudo eliminar el archivo");
         }
+        String [] in = input.split(" ");
+        tableNames.remove(Helpers.getTablePos(in[2]));
     }
 }

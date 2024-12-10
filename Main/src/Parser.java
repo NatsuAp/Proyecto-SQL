@@ -320,11 +320,11 @@ public class Parser {
         input = input.toLowerCase();
         String [] in = input.split(" ");
         if(!in[0].equals("drop")){
-            Errors.checkError(2, input);
+            Errors.checkError(1, input);
             return false;
         }
         if(!in[1].equals("table")){
-            Errors.checkError(3, input);
+            Errors.checkError(1, input);
             return false;
         }
         int i =0;
@@ -335,7 +335,9 @@ public class Parser {
             }
         }
         if(i==0){
+            Errors.checkError(i, input);
             return false;
+
         }
         return true;
     }

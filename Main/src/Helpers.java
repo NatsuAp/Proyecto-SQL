@@ -84,4 +84,15 @@ public class Helpers {
         }
         return 0;
     }
+
+    public static int getTablePos(String input){
+        int i = 0;
+        for(String x : Comando.tableNames){
+            if(x.equals(input)){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
 }
