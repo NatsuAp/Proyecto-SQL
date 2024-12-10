@@ -44,6 +44,9 @@ public class Parser {
         if(UpdateParser.parseUpdate(input)){
             return "update";
         }
+        if(parseDrop(input)){
+            return "drop";
+        }
         
         return "";
     }
@@ -313,6 +316,29 @@ public class Parser {
         return false;
     }
 
+    public static boolean parseDrop(String input) {
+        input = input.toLowerCase();
+        String [] in = input.split(" ");
+        if(!in[0].equals("drop")){
+            Errors.checkError(2, input);
+            return false;
+        }
+        if(!in[1].equals("table")){
+            Errors.checkError(3, input);
+            return false;
+        }
+        int i =0;
+        for(String x: Comando.tableNames){
+            if(in[2].equals(x)){
+              
+                i++;
+            }
+        }
+        if(i==0){
+            return false;
+        }
+        return true;
+    }
    
     
     

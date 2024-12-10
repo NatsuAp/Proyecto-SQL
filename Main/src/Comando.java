@@ -2,25 +2,16 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-
-
 import java.io.FileReader;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
-
 import java.util.Scanner;
-
 public class Comando {
 
     public static String tableFolder = "tables";
     public static ArrayList<String> tableNames = null;
-
-
-
-
 
     public static void insert(String linea2, String linea1) {
         linea2 = linea2.toLowerCase();
@@ -60,29 +51,6 @@ public class Comando {
         fileCols = fileCols.toLowerCase();
         String[] filesCols = fileCols.split(",");
 
-        // String line = "";
-        //int t = 0;
-        // for (int i = 0; i < filesCols.length; i++) {
-
-        // if (ColsNeeded.contains(filesCols[i])) {
-        // if (i != 0) {
-        // line = line + "," + line2[t];
-        // t = t + 1;
-        // } else {
-        // line = line + line2[t];
-        // t = t + 1;
-        // }
-
-        // } else {
-        // if (i != 0) {
-        // line = line + "," ;
-        // } else {
-        // line = line + " ";
-        // }
-
-        // }
-
-        // }
         String[] line = new String[filesCols.length];
         for (int i = 0; i < cols.length; i++) {
             for (int j = 0; j < filesCols.length; j++) {
@@ -92,23 +60,22 @@ public class Comando {
             }
         }
 
-        for(int i = 0; i<line.length; i++){
+        for (int i = 0; i < line.length; i++) {
             if (line[i] == null) {
                 line[i] = " ";
             }
         }
 
-        String linea="";
+        String linea = "";
         for (int i = 0; i < line.length; i++) {
             if (i != 0) {
                 linea = linea + "," + line[i];
-              
+
             } else {
 
                 linea = linea + line[i];
             }
         }
-        System.out.println(linea);
 
         FileWriter fileWriter;
         try {
@@ -122,7 +89,6 @@ public class Comando {
             e.printStackTrace();
         }
 
-        
     }
 
     public static void end() {
@@ -261,11 +227,9 @@ public class Comando {
                     try {
                         for (int i = 0; i < order.size(); i++) {
 
-
                             String[] temp = scanner.nextLine().split(",");
                             String tempString = "";
                             for (int x : order) {
-
 
                                 tempString = tempString + "," + temp[x - 1];
                                 tempString = tempString.replaceAll("\\s", "");
@@ -359,7 +323,6 @@ public class Comando {
         } catch (FileNotFoundException e) {
             System.out.println("There was an error accessing the File: " + table + ".csv");
         }
-
 
     }
 
@@ -474,17 +437,17 @@ public class Comando {
     }
 
     public static void Update() {
-        int p=0;
+        int p = 0;
         ArrayList<String> lines = new ArrayList<>();
         String table = UpdateParser.tableTemp;
         File file = new File("tables/" + table + ".csv");
         ArrayList<String> columns = new ArrayList<>();
-        for(String l:UpdateParser.columns){
+        for (String l : UpdateParser.columns) {
             columns.add(l);
         }
-        
+
         ArrayList<String> newInfo = new ArrayList<>();
-        for(String l:UpdateParser.newInfo){
+        for (String l : UpdateParser.newInfo) {
             newInfo.add(l);
         }
         String toChangeColumn = UpdateParser.toChangeColumn;
@@ -492,7 +455,7 @@ public class Comando {
         String line = "";
         int k = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            
+
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
             }
@@ -501,18 +464,18 @@ public class Comando {
             int x = Helpers.getColumnPosition(table, toChangeColumn);
             for (int i = 1; i < lines.size(); i++) {
                 String linesArr[] = lines.get(i).split(",");
-                if (linesArr[x-1].equals(String.valueOf(toChangeColumnWhere))) {
-                    p+=1;
+                if (linesArr[x - 1].equals(String.valueOf(toChangeColumnWhere))) {
+                    p += 1;
                     for (String X : columns) {
                         int j = Helpers.getColumnPosition(table, X);
 
-                        linesArr[j-1] = newInfo.get(k);
+                        linesArr[j - 1] = newInfo.get(k);
                         k += 1;
 
                     }
-                    line="";
-                    for(String g: linesArr){
-                        line+=","+g;
+                    line = "";
+                    for (String g : linesArr) {
+                        line += "," + g;
                     }
                     line = line.substring(1);
                     lines.set(i, line);
@@ -520,7 +483,7 @@ public class Comando {
                 }
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
-            for(String h:lines){
+            for (String h : lines) {
                 writer.write(h);
                 writer.newLine();
             }
@@ -529,11 +492,21 @@ public class Comando {
         } catch (Exception e) {
 
         }
-        if(p==0){
+        if (p == 0) {
             System.out.println("No value matched the one given, no change were made");
         }
         UpdateParser.columns.clear();
         UpdateParser.newInfo.clear();
-       
+
+    }
+
+    public static void DropTable(String input) {
+        input = input.toLowerCase();
+        File file = new File("tables/" + getName(input) + ".csv");
+        if (file.delete()) {
+            System.out.println("Archivo eliminado");
+        } else {
+            System.out.println("No se pudo eliminar el archivo");
+        }
     }
 }

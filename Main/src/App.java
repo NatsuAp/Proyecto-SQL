@@ -11,24 +11,25 @@ public class App {
     public static String in = "";
     public static String line = "";
     public static String command;
-     public static Scanner scanner = new Scanner(System.in);
+    public static Scanner scanner = new Scanner(System.in);
 
-     public static void setup(){
+    public static void setup() {
         File file = new File("tables/");
         File files[] = file.listFiles();
         ArrayList<String> tableNames = new ArrayList<>();
-        for(File x: files){
+        for (File x : files) {
             String temp = x.getName().split("\\.")[0];
 
             tableNames.add(temp);
-            
+
         }
-        Comando.tableNames=tableNames;
-     }
+        Comando.tableNames = tableNames;
+    }
+
     public static void main(String[] args) {
         setup();
         System.out.println("Program Initialized");
-        
+
         while (a) {
             input = scanner.nextLine();
 
@@ -49,14 +50,18 @@ public class App {
                         line = line + input + ",";
 
                         if (Errors.checkError(5, input) || Errors.checkError(4, input) || Errors.checkError(3, input)) {
-                            
+
                             break switchLabel;
                         }
                     }
-                    if(!Errors.checkError(2, line)){
+                    if (!Errors.checkError(2, line)) {
                         Comando.createTable(line);
                     }
                         
+                        
+                    
+
+
                     
 
                     break;
@@ -64,12 +69,12 @@ public class App {
 
                     input = scanner.nextLine();
                     String en = input.toLowerCase();
-                    if(!en.contains("values")){
+                    if (!en.contains("values")) {
                         Errors.checkError(1, en);
-                    }else{
+                    } else {
                         Comando.insert(input, in);
                     }
-                    
+
                     break;
                 case "select":
                     Comando.select(in);
@@ -80,31 +85,29 @@ public class App {
 
                     break;
                 case "tables":
-                Comando.listTables();
-                break;
+                    Comando.listTables();
+                    break;
                 case "columns":
-                Comando.showColumns(in);
-                break;
+                    Comando.showColumns(in);
+                    break;
                 case "delete":
-                Comando.Delete(in);
-                break;
+                    Comando.Delete(in);
+                    break;
                 case "update":
-                    
+
                     String line2 = scanner.nextLine();
-                    if(UpdateParser.parseUpdate2(line2)){
+                    if (UpdateParser.parseUpdate2(line2)) {
                         String line3 = scanner.nextLine();
-                        if(UpdateParser.parseUpdate3(line3)){
-                           Comando.Update();
+                        if (UpdateParser.parseUpdate3(line3)) {
+                            Comando.Update();
                         }
-                        
+
                     }
-                    
-                    
-                
-                
 
-
-                break;
+                    break;
+                case "drop":
+                    Comando.DropTable(in);
+                    break;
                 default:
                     if (!command.equals("ERROR")) {
                         System.out.println("Unknown command");
