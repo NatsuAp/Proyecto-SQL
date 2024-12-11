@@ -99,11 +99,16 @@ public class Parser {
         
         if (in2[0].equals("insert") && in2[1].equals("into")) {
 
-           
+           try {
             if (in2[2].isEmpty() || in2[3].isEmpty()) {
                 Errors.checkError(6, input);
                 return false;
             }
+           } catch (Exception e) {
+           
+            return false;
+           }
+            
 
             if (!Comando.tableNames.contains(in2[2])) {
                 Errors.checkError(6, input);
