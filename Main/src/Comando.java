@@ -52,13 +52,19 @@ public class Comando {
         String[] filesCols = fileCols.split(",");
 
         String[] line = new String[filesCols.length];
-        for (int i = 0; i < cols.length; i++) {
-            for (int j = 0; j < filesCols.length; j++) {
-                if (cols[i].equals(filesCols[j])) {
-                    line[j] = line2[i];
+        try {
+            for (int i = 0; i < cols.length; i++) {
+                for (int j = 0; j < filesCols.length; j++) {
+                    if (cols[i].equals(filesCols[j])) {
+                        line[j] = line2[i];
+                    }
                 }
             }
+        } catch (Exception e) {
+           Errors.checkError(1, fileCols);
+           return;
         }
+        
 
         for (int i = 0; i < line.length; i++) {
             if (line[i] == null) {
@@ -327,36 +333,45 @@ public class Comando {
     }
 
     public static void Delete(String input) {
-
+        int caremonda=0;
+        int cont=0;
         String condition = Parser.conditionTemp;
         String table = Parser.tableTemp;
         String column = Parser.columnTemp;
         String sign = String.valueOf(condition.charAt(0));
         condition = condition.substring(1);
-        String colsLine = "";
+       
         String dataLine = "";
-
+        ArrayList<String> lines = new ArrayList<>();
         String line = "";
         int count = 0;
 
         int colPosition = 0; // empieza en 0 No CAMBIAR
         File file = new File("tables/" + table + ".csv");
         File tempFile = new File("tables/" + table + "_temp.csv");
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile, false));
-            String columns[] = reader.readLine().split(",");
-            colsLine = Helpers.getLine(columns);
+        try ( BufferedReader reader = new BufferedReader(new FileReader(file));) {
+            
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+
+            String columns[] = lines.get(0).split(",");
+            
             for (String x : columns) {
                 if (x.equals(column)) {
                     break;
                 }
                 colPosition++;
             }
-            writer.write(colsLine);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            writer.write(lines.get(0));
             writer.newLine();
-
-            while ((line = reader.readLine()) != null) {
-                String in[] = line.split(",");
+            lines.remove(0);
+           
+                for (String string : lines) {
+                    cont+=1;
+                
+                String in[] = string.split(",");
                 String data = in[colPosition];
 
                 switch (sign) {
@@ -364,12 +379,12 @@ public class Comando {
                         if (Character.isDigit(condition.charAt(0))) {
 
                             if (Helpers.getNumber(data).doubleValue() == Helpers.getNumber(condition).doubleValue()) {
-                                in[colPosition] = " ";
+                              //  in[colPosition] = " ";
                                 count += 1;
                             }
                         } else {
                             if (data.equals(condition)) {
-                                in[colPosition] = " ";
+                               // in[colPosition] = " ";
                                 count += 1;
                             }
                         }
@@ -377,30 +392,40 @@ public class Comando {
                         break;
                     case ">":
                         if (Helpers.getNumber(data).doubleValue() > Helpers.getNumber(condition).doubleValue()) {
-                            in[colPosition] = " ";
+                           // in[colPosition] = " ";
                             count += 1;
                         }
                         break;
                     case "<":
                         if (Helpers.getNumber(data).doubleValue() < Helpers.getNumber(condition).doubleValue()) {
-                            in[colPosition] = " ";
+                           // in[colPosition] = " ";
                             count += 1;
                         }
                         break;
                     default:
                         break;
                 }
-
+                
                 for (String x : in) {
                     dataLine += "," + x;
                 }
+
                 dataLine = dataLine.substring(1);
-
-                writer.write(dataLine);
-                writer.newLine();
+                if(count>0){
+                    caremonda+=1;
+                }else{
+                    writer.write(dataLine);
+                    if(cont!=lines.size()){
+                        writer.newLine();
+                    }
+                   
+                
+                }
                 dataLine = "";
-
+                count=0;
+                
             }
+            
 
             writer.close();
 
@@ -415,20 +440,10 @@ public class Comando {
             System.out.println("Unkown Error, Try Again");
 
         }
-        try (BufferedReader reader = new BufferedReader(new FileReader(tempFile))) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
-            while ((line = reader.readLine()) != null) {
-                writer.write(line);
-                writer.newLine();
-            }
-
-            writer.close();
-        } catch (Exception e) {
-            System.out.println("There was an error");
-        }
+       
 
         tempFile.delete();
-        if (count > 0) {
+        if (caremonda > 0) {
             System.out.println("Successfully deleted " + count + " records from " + table);
         } else {
             System.out.println("No records match the specified criteria in " + table + ", No changes were made.");

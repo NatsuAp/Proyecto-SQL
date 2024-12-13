@@ -48,7 +48,8 @@ public class Helpers {
             return true;
            }
            return false;
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
+            System.out.println(e);
             System.out.println("ERROR IN FUNCTION checkColumnExists()");
            return false;
         }
