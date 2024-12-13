@@ -444,7 +444,7 @@ public class Comando {
 
         tempFile.delete();
         if (caremonda > 0) {
-            System.out.println("Successfully deleted " + count + " records from " + table);
+            System.out.println("Successfully deleted " + caremonda + " records from " + table);
         } else {
             System.out.println("No records match the specified criteria in " + table + ", No changes were made.");
         }
@@ -498,8 +498,11 @@ public class Comando {
                 }
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            int l=0;
             for (String h : lines) {
+                l+=1;
                 writer.write(h);
+                if(l!=lines.size())
                 writer.newLine();
             }
 
